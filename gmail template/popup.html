@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>gmail template</title>
+
+
+<script>
+
+
+var background = chrome.extension.getBackgroundPage();
+
+window.addEventListener('load', function(e) {
+alert("1");
+	
+	chrome.bookmarks.getTree(function(root){
+alert("1");
+		root.forEach(parser);
+		function parser(node){
+			if (node.children) {
+				if (node.parentId == folder_id){
+					url.push(node.url);
+					title.push(node.title);
+				}else if(node.children && node.title == 'Gmail template'){
+					folder_id = node.id;
+					console.log("get folder: " + node.title + " : " + node.id);
+					node.children.forEach(parser);
+				}else if(node.children){
+					node.children.forEach(parser);
+				}
+			}
+		}
+alert("2");
+		console.log("template: " + title);
+
+		
+		for(va i=0;i < url.length; i++){
+			aaa = aaa + '<a target=_blank href='+url[i] +'>'+ title[i] + '</a><br>';
+		}
+		
+		document.getElementById('aaa').innerHTML = aaa;
+	});
+
+
+
+}, false);
+
+var folder_id ='';
+var url = [];
+var title = [];
+var aaa= "";
+
+
+
+</script>
+</head>
+<body >
+
+<div id=aaa></div>
+</body> 
+</html>
+
+
+<!-- http://login.yahoo.co.jp/config/login_verify2?.src=ym -->
+<!-- http://jp.f32.mail.yahoo.co.jp/ipn/ -->

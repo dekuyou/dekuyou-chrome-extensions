@@ -1,0 +1,90 @@
+<html>
+<head>
+<title>pop UberNote</title>
+<link rel="stylesheet" href="http://www.ubernote.com/webnote/webtools/stylesheets/mobile.css" type="text/css" />
+<script>
+
+
+var background = chrome.extension.getBackgroundPage();
+
+
+window.addEventListener('load', function(e) {
+	iframe = document.createElement("iframe");
+	iframe.width = "325";
+	iframe.height = "0"
+//	iframe.frameborder = "0";
+//	iframe.scrolling="no";	
+	document.getElementById("body").appendChild(iframe);
+
+	iframedoc = iframe.contentDocument;
+	
+	iframedoc.writeln('<body ></body>');
+	iframedoc.location.href='http://m.ubernote.com';
+
+	iframe.onload = function () {
+		document.getElementById("load").innerHTML = '<a target=_blank href=# onclick=goUber();return false;>ubernote.com</a>';
+		
+
+		intervalId = setInterval("viwe()", 1); // 1*1000 = 1s
+
+
+	}
+	
+}, false);
+var intervalId;
+var iframe;
+var i=0
+
+function viwe(){
+	i=i+5;
+	iframe.height = i + "";
+	if(i >'380'){
+		clearInterval(intervalId);
+
+	}
+}
+
+
+
+function goUber(){
+	background.goToUberNote();
+}
+
+function UberClip(){
+	background.doUberClip();
+}
+function UberMark(){
+	background.doUberMark();
+}
+
+
+</script>
+
+</head>
+<body >
+<table>
+<tr >
+<td align=left >
+<button onclick="UberClip();" class="buttonclass">UberClip</button>
+
+<button onclick="UberMark();" class="buttonclass">UberMark</button>
+
+</td>
+<td align=right id=load>
+<a target=_blank href=# onclick=goUber();return false;>ubernote.com</a>
+<img src=loadinfo.net.gif>
+</td>
+
+</tr>
+<tr>
+<td colspan=2>
+<div id=body ></div>
+
+</td>
+</tr>
+
+
+</body> 
+</html>
+
+

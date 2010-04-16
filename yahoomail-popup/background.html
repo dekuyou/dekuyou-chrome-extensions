@@ -1,0 +1,329 @@
+<html>
+
+<head>
+<script>
+var tmpsubd ="";
+
+var nounread = [0,0,0];
+var unread = [255,0,0];
+var newmsg = [255,0,0];
+
+chrome.extension.getVersion = function() { 
+  if (!chrome.extension.version_) { 
+    var xhr = new XMLHttpRequest(); 
+    xhr.open("GET", chrome.extension.getURL('manifest.json'), false); 
+    xhr.onreadystatechange = function() { 
+      if (this.readyState == 4) { 
+        var manifest = JSON.parse(this.responseText); 
+        chrome.extension.version_ = manifest.version; 
+      } 
+   }; 
+   xhr.send(); 
+ } 
+ return chrome.extension.version_; 
+}
+
+
+window.addEventListener('load', function(e) {
+	var old_ver = ( localStorage["version"] || "" ).split(".");
+	var new_ver = (chrome.extension.getVersion() + "").split(".");
+	
+	if(old_ver[0]+'.'+old_ver[1]+'.'+old_ver[2] != new_ver[0]+'.'+new_ver[1]+'.'+new_ver[2]){
+		chrome.tabs.getAllInWindow(undefined, function(tabs) {
+			for (var i = 0, tab; tab = tabs[i]; i++) {
+				var str = tab.url;
+				if (str.match('dekuyou.ddo.jp/knowledge/')) { 
+					chrome.tabs.update(tab.id, {selected: true});
+					return;
+				}
+			}
+			chrome.tabs.create({url:'http://dekuyou.ddo.jp/knowledge/?chrome/extensions'});
+		});
+		
+		localStorage["version"] = chrome.extension.getVersion();
+		
+		// 255, 0, 0 red
+		chrome.browserAction.setBadgeText({text:"new!"});
+		chrome.browserAction.setBadgeBackgroundColor({color:[0,255,255, 255]});
+		
+	}
+	
+	start();
+}, false);
+
+var intervalId;
+function start(){
+	interval = (localStorage['interval'] || "");
+	if( interval.match( /[^0-9]+/ ) || interval == '' ) {
+		interval = localStorage["interval"] = '60';
+	}
+	if(interval == '0'){return;}
+
+	intervalId = setInterval("getYmail_jp_ddo_dekuyou()", interval*1000); // 1*1000 = 1s
+
+
+}
+
+function stop(){
+	clearInterval(intervalId);
+	start();
+}
+
+
+function getYmail_jp_ddo_dekuyou(check){
+	if(!localStorage['domain']){return;}
+
+
+	try{
+		if(( localStorage["checkingbadge"] || "" )+"" != "true"){
+
+			chrome.browserAction.setBadgeText({text:"...."});
+		}
+		subdomain = (localStorage["subdomain"] || "");
+		
+		var flg = '0';
+		var xmlhttp = new window.XMLHttpRequest();
+		
+		xmlhttp.open("GET",localStorage['domain'] + "ipn/",false);
+		try{
+			xmlhttp.send(null);
+			flg = '1';
+		}catch(e3){
+			console.log('xmlhttp.responseText is ???:' + localStorage['domain'] + "ipn/" + e3); 		
+		}
+		
+		var text = xmlhttp.responseText;
+
+		
+		if(text == ''){
+			
+			throw new Error("xmlhttp.responseText is null.");
+		
+		
+		}else{
+			localStorage["bodytext"] = text;
+			
+			if(text.indexOf('var action = "folders";') <0){
+				throw new Error("xmlhttp.responseText is no folders.");
+			}
+			
+		}
+	}catch(e){
+		console.log("xmlhttp.responseText is ???:" + e); 
+//		chrome.browserAction.setIcon({path:'windows-live-logo_grey.png'});
+
+		chrome.browserAction.setBadgeText({text:'?'});
+		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
+
+		
+		return;
+	}
+	
+	// unread msg
+	var startA = text.indexOf("fid=Inbox");
+
+// alert(startA);
+	var midoku = text.substring(text.indexOf("icnBg", startA), text.indexOf("</li", startA));
+// alert(midoku);
+	var midokusuunohajimari;
+	var midokuB;
+	
+	if(midoku.indexOf("rightModule") < 0){
+		midokuB = '0';
+		
+	}else{
+		midoku = midoku.substring(midoku.indexOf("rightModule"), midoku.indexOf("</div",midoku.indexOf("rightModule")));
+// alert(midoku);
+
+		midokusuunohajimari = midoku.search('[0-9]');
+
+		midokuB = midoku.substring(midokusuunohajimari);
+	}
+// alert(midokuB);
+	
+	// msgid
+//	var startB = text.indexOf("paddedbottom", startA);
+//	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
+	var idBadge = "";
+//	if(msgid != newid){
+//		idBadge = "1"
+//		msgid = newid;
+//	}
+	
+	try{
+		var hyouji = parseInt(midokuB);
+		if(isNaN(hyouji)){
+			hyouji = '0';
+		}
+		
+		// color seting
+		if ((localStorage["nounread"] || "") != ""){
+			nounread = hex2RGB(localStorage["nounread"]);
+		}
+//		if ((localStorage["newmsg"] || "") != ""){
+//			newmsg = hex2RGB(localStorage["newmsg"]);
+//		}
+		if ((localStorage["unread"] || "") != ""){
+			unread = hex2RGB(localStorage["unread"]);
+		}
+		// color seting
+		
+		
+		if (hyouji == '0'){
+			if(( localStorage["nomailicongrey"] || "" )+"" == "true"){
+//				chrome.browserAction.setIcon({path:'windows-live-logo_grey.png'});
+			}else{
+//				chrome.browserAction.setIcon({path:'windows-live-logo.png'});
+			}
+			if(( localStorage["0badge"] || "" )+"" == "true"){
+				chrome.browserAction.setBadgeText({text:''});
+			}else{
+				chrome.browserAction.setBadgeText({text:''+hyouji});
+				chrome.browserAction.setBadgeBackgroundColor({color:[nounread[0],nounread[1],nounread[2], 255]});
+			}
+		}else{
+//			chrome.browserAction.setIcon({path:'windows-live-logo.png'});
+			
+			
+			if(idBadge == '1'){
+				// 
+				chrome.browserAction.setBadgeText({text:">" + hyouji});
+				chrome.browserAction.setBadgeBackgroundColor({color:[newmsg[0],newmsg[1],newmsg[2], 255]});
+				if(( localStorage["usesound"] || "" )+"" == "true"){
+					var file = 'newmsg1.mp3';
+					document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
+				}
+			}else{
+				// 255, 0, 0 red
+				chrome.browserAction.setBadgeText({text:"" + hyouji});
+				chrome.browserAction.setBadgeBackgroundColor({color:[unread[0],unread[1],unread[2], 255]});
+
+			}
+		}
+	}catch(e2){
+		console.log("HTML parse error:" + e2);
+		
+//		chrome.browserAction.setIcon({path:'windows-live-logo_grey.png'});
+		chrome.browserAction.setBadgeText({text:'xxxx'});
+		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
+
+	}
+
+}
+
+
+
+
+function goToYmail() {
+	chrome.tabs.getAllInWindow(undefined, function(tabs) {
+		for (var i = 0, tab; tab = tabs[i]; i++) {
+			var str = tab.url;
+			if (str.match('login.yahoo.co.jp')) { 
+				chrome.tabs.update(tab.id, {selected: true});
+				return;
+			}
+		}
+		chrome.tabs.create({url:'https://login.yahoo.co.jp/config/login_verify2?.src=ym'});
+	});
+}
+
+
+function foo() { alert("bar"); }
+
+
+
+
+var tab_id;
+function initYmailChecker(){
+	console.log("initializer routine");
+
+	chrome.tabs.create({url:'http://mail.yahoo.co.jp/', selected:false }, function(tab) {
+		tab_id = tab.id;
+		initTimer();
+	});
+	
+}
+
+function initYmailChecker2(){
+
+	chrome.tabs.get(tab_id, function(tab2) {
+		
+		var checkloginpage = tab2.url.indexOf("login.yahoo.co.jp", 0);
+		if(checkloginpage >=0 ){
+			console.log("un loged in "+ tab2.url);
+			goToYmail();
+			return;
+		}
+		
+			
+		console.log("your local domain is "+ tab2.url);
+		
+		tmpsubd = localStorage['domain'] = tab2.url.substring(0,tab2.url.indexOf("mail.yahoo.co.jp/")+17);
+		
+//		chrome.extension.sendRequest('fnnkchnikfopkpnkjmpfkbakjpipehfh',{url:tmpsubd});
+		removeInitTAB();
+	});
+
+}
+
+
+function removeInitTAB(){
+	console.log("chrome.tabs.remove(tab_id);");
+
+	chrome.tabs.remove(tab_id);
+	tab_id = '';
+
+}
+
+
+var iframedoc;
+function initTimer() {
+	var iframe = document.createElement("iframe");
+//	document.getElementById("frame").appendChild(iframe);
+//	iframedoc = iframe.contentDocument;
+//	iframedoc.writeln("<body></body>");
+//	iframedoc.location.href='http://mail.yahoo.co.jp/';
+
+	iframe.src = "http://mail.yahoo.co.jp/";
+
+	iframe.onload = function () {
+		initYmailChecker2();
+
+	}
+	
+	document.body.appendChild(iframe);
+
+	
+}
+
+
+function hex2RGB(hex){
+	var s=hex;
+    var t = {
+        "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,
+        "A":10,"B":11,"C":12,"D":13,"E":14,"F":15,
+        "a":10,"b":11,"c":12,"d":13,"e":14,"f":15};
+    var r=0, g=0, b=0;
+    if(s.search(/#[0-9a-fA-F]{6}$/) == 0) {
+        r = t[s.charAt(1)]*16+t[s.charAt(2)];
+        g = t[s.charAt(3)]*16+t[s.charAt(4)];
+        b = t[s.charAt(5)]*16+t[s.charAt(6)];
+    }else{
+		throw new Error("color seting fail.");
+	}
+	
+	return [(r || 0),(g || 0),(b || 0)];
+ 
+}
+
+
+
+</script>
+<body>
+
+
+ <div id="frame"></div>
+
+</body>
+
+</html>

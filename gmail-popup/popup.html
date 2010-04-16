@@ -1,0 +1,44 @@
+<html>
+<head>
+<title>Google Tasks unofficial</title>
+<script type="text/javascript">
+var width = "320";
+if(localStorage.getItem("com.openbit.chrome.tasks.width") != null)
+	width = localStorage.getItem("com.openbit.chrome.tasks.width");
+var height = "360";
+if(localStorage.getItem("com.openbit.chrome.tasks.height") != null) {
+	height = localStorage.getItem("com.openbit.chrome.tasks.height");
+}
+var apps_url = "http://mail.google.com/tasks/ig";
+var canvus_url = "https://mail.google.com/tasks/canvas";
+if(localStorage.getItem("com.openbit.chrome.tasks.apps_url") != null) {
+	 apps_url = "http://mail.google.com/tasks/a/" + localStorage.getItem("com.openbit.chrome.tasks.apps_url") + "/ig";
+	canvus_url = "https://mail.google.com/tasks/a/" + localStorage.getItem("com.openbit.chrome.tasks.apps_url") + "/canvas";
+}
+function goToUrl(url) {
+  chrome.tabs.getAllInWindow(undefined, function(tabs) {
+    for (var i = 0, tab; tab = tabs[i]; i++) {
+      if (tab.url && (tab.url == url)) {
+        chrome.tabs.update(tab.id, {selected: true});
+        return;
+      }
+    }
+    chrome.tabs.create({url: url});
+  });
+}
+</script>
+</head>
+<body>
+<script type="text/javascript">
+document.write("<iframe src=\"" + apps_url + "\" frameborder=\"0\" width=" + width + " height=" + height + " ></iframe>");
+</script>
+<center><!--
+<script type="text/javascript">
+if(localStorage.getItem("com.openbit.chrome.tasks.no_ads") == null) { document.write('<iframe src="http://openbit.co.uk/ads.html" width="254" height="80" frameborder="0"></iframe>'); }
+</script>-->
+</center>
+</body>
+
+</html>
+
+<!-- https://mail.google.com/mail/x/ -->

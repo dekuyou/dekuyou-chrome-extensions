@@ -1,0 +1,19 @@
+{
+  "name": "楽天ポップアップ",
+  "version": "0.0.1",
+  "description": "楽天市場をポップアップで",
+  "icons": { "48": "w107.gif",
+          "128": "w107.gif" },
+  "browser_action": {
+    "default_icon": "w107.gif",
+    "popup": "popup.html"
+  },
+  "background_page": "background.html",
+  "permissions": ["tabs","http://*/*","https://*/*"],
+   "content_scripts": [
+    {
+      "matches": ["http://*/*","https://*/*"],
+      "js": ["jp_ddo_dekuyou_popRakuten.js"]
+    }
+  ]
+}

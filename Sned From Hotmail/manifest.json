@@ -1,0 +1,13 @@
+{
+  "name": "Send From Hotmail",
+  "version": "0.0.1",
+  "description": "Send From Hotmail.",
+    "icons": { "48": "windows-live-logo.png",
+          "128": "windows-live-logo.png" },
+  "background_page": "background.html",
+  "browser_action": {
+    "default_title": "Send From Hotmail",
+    "default_icon": "windows-live-logo.png"
+ },
+  "permissions": [ "tabs","http://*/*","https://*/*"]
+}

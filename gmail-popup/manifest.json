@@ -1,0 +1,14 @@
+{
+  "name": "HotMailポップアップ",
+  "version": "0.0.3",
+  "description": "HotMailをポップアップで",
+  "icons": { "48": "windows-live-logo_48.png",
+          "128": "windows-live-logo_128.png" },
+  "browser_action": {
+    "default_icon": "flag.jpg",
+    "popup": "popup.html"
+  },
+  "permissions": [
+    "http://*/*","https://*/*"
+  ]
+}

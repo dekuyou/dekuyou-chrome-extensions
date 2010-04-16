@@ -1,0 +1,26 @@
+<html>
+<head>
+<title></title>
+
+<script>
+
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+	chrome.windows.get(tab.windowId , function(window){
+	
+		alert(document.getSelection());
+	
+	});
+});
+ 
+
+
+
+</script>
+
+</head>
+<body >
+
+
+</body> 
+</html>

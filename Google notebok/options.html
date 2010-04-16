@@ -1,0 +1,74 @@
+<html lang=ja>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>add to Google Notebook option</title>
+
+<script>
+
+var background = chrome.extension.getBackgroundPage();
+window.onload = function(){
+	restore_options();
+	document.getElementById("ver").innerHTML = background.chrome.extension.getVersion();
+	
+}
+
+
+function save_https_options(){
+
+    localStorage["useHttps"] = document.getElementById("h1").checked;
+	viewStatus("status_https","Options Saved.");
+
+	
+}
+
+
+function viewStatus(str1,str2){
+    //
+    var status = document.getElementById(str1);
+    status.innerHTML = str2;
+    setTimeout(function() { status.innerHTML = ""; }, 1 * 1000);
+
+
+}
+
+function restore_options() {
+    //
+	if(( localStorage["useHttps"] || "" )+"" == "true"){
+		document.getElementById("h1").checked = true;
+	}
+	
+
+}
+
+
+
+
+</script>
+
+<body >
+<h1><img src=./google-notebook.png height=48>add to Google notebook Options</h1>
+version <span id=ver></span>
+<hr>
+
+<br>
+
+
+use Https : <input type="checkbox" name=t1 id=h1 value=''>&nbsp;
+<button onclick="save_https_options()">Change use Https.</button>
+<div id="status_https" ></div>
+
+<br>
+
+
+<br>
+
+<hr>
+
+<iframe src="http://dekuyou.ddo.jp/myPage.html" width=100% height=80 scrolling="no" frameborder="0">
+</iframe>
+
+</body>
+
+<script type="text/javascript" src="./cpick.js"></script>
+</html>

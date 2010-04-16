@@ -1,0 +1,7 @@
+glob:*.zip
+glob:*.lnk
+glob:bak/
+glob:*.crx
+glob:*.pem
+glob:tmp/
+glob:ƒMƒƒƒ‰ƒŠ[/

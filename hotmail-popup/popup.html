@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>pop hotmail</title>
+
+<script>
+
+window.addEventListener('load', function(e) {
+//	document.getElementById("body").innerHTML = '<object data="http://mail.live.com/m/folder.aspx" type="text/html" width="325" height="480"></object>';
+	
+//	getSelectedText();
+
+	iframe = document.createElement("iframe");
+	iframe.width = "325";
+	iframe.height = "0"
+//	iframe.frameborder = "0";
+//	iframe.scrolling="no";	
+	document.getElementById("body").appendChild(iframe);
+
+	iframedoc = iframe.contentDocument;
+	
+	iframedoc.writeln('<body ></body>');
+	iframedoc.location.href='http://mail.live.com/m/folder.aspx';
+
+	iframe.onload = function () {
+		intervalId = setInterval("viwe()", 1); // 1*1000 = 1s
+	}
+	
+}, false);
+var intervalId;
+var iframe;
+var i=0
+
+function viwe(){
+	i=i+5;
+	if(i >'480'){
+		clearInterval(intervalId);
+		document.getElementById("load").innerHTML = '';
+		i=480;
+	}
+	iframe.height = i + "";
+
+}
+
+</script>
+
+
+</head>
+<body>
+<table>
+<tr>
+<td colspan=2>
+<div id=body></div>
+</td>
+</tr>
+<tr>
+<td>
+<span align=left><a href=http://mail.live.com/ target=_blank> -> Go to mail.live.com.</a></span>
+</td>
+<td align=rigth>
+<span align=right id=load><img src=loadinfo.net.gif></span>
+</td>
+
+</tr>
+</table>
+
+</body> 
+</html>
+
+

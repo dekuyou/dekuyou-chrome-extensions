@@ -1,0 +1,127 @@
+<html lang=ja>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Gmail template</title>
+
+<script>
+
+var background = chrome.extension.getBackgroundPage();
+window.addEventListener('load', function(e) {
+	document.getElementById("ver").innerHTML = background.chrome.extension.getVersion();
+
+	
+	chrome.bookmarks.getTree(function(root){
+	
+		root.forEach(parser);
+		function parser(node){
+			if (node.children) {
+				if(node.title == 'Gmail template'){
+					folder_id = node.id;
+					console.log("get folder: " + node.title + " : " + node.id);
+				}else{
+					node.children.forEach(parser);
+				}
+			}
+		}
+		if(folder_id == ""){
+			chrome.bookmarks.create({'parentId': '1',
+								 'title': 'Gmail template'},
+								function(newFolder) {
+				console.log("added folder: " + newFolder.title + " : " + newFolder.id);
+				folder_id = newFolder.id;
+			});		
+		}
+	
+	});
+
+	
+}, false);
+
+var folder_id = "";
+
+
+function viewStatus(str1,str2){
+    //
+    var status = document.getElementById(str1);
+    status.innerHTML = str2;
+    setTimeout(function() { status.innerHTML = ""; }, 1 * 1000);
+
+
+}
+
+
+function save(){
+
+// https://mail.google.com/mail/?view=cm&fs=1&to=test@yahoo.co.jp&cc=testcc@gmail.com&bcc=testbcc@gmail.com&su=test&body=%E2%94%80%0D%0A
+
+	var appsString = document.getElementById("apps").value + "";
+	var toString = document.getElementById("to").value + "";
+	var ccString = document.getElementById("cc").value + "";
+	var bccString = document.getElementById("bcc").value + "";
+	var suString = document.getElementById("su").value + "";
+	var bodyString = document.getElementById("body").value + "";
+	
+	var title = suString;
+	var url = 'https://mail.google.com/';
+	
+	// a/bsweb.office-on-the.net/
+	if(appsString != '' ){
+		url = url + 'a/' + appsString + '/?view=cm&fs=1';
+	}else{
+		url = url + 'mail/?view=cm&fs=1';
+	}
+	if(toString != '' ){
+		url = url + '&to=' + encodeURI(toString);
+	}
+	if(ccString != '' ){
+		url = url + '&cc=' + encodeURI(ccString);
+	}
+	if(bccString != '' ){
+		url = url + '&bcc=' + encodeURI(bccString);
+	}
+	if(suString != '' ){
+		url = url + '&su=' + encodeURI(suString);
+	}
+	if(bodyString != '' ){
+		url = url + '&body=' + encodeURI(bodyString);
+	}
+
+	
+	chrome.bookmarks.create({'parentId': folder_id,
+                         'title': title,
+                         'url': url});
+                
+	viewStatus("status", suString + " Saved.");
+	
+}
+
+
+</script>
+
+<body >
+<h1>Gmail template</h1>
+version <span id=ver></span>&nbsp;(Alpha Test Version)<br>
+<br>
+<div id="status" ></div>
+<br>
+Apps Domain:<input type=text id=apps><br>
+to:<input type=text id=to><br>
+cc:<input type=text id=cc><br>
+bcc:<input type=text id=bcc><br>
+subject:<input type=text id=su><br>
+<textarea id=body rows="10" cols="40" style="overflow:hidden;"></textarea><br>
+<button onclick="save()">save.</button>
+
+<br>
+
+<br>
+
+<iframe src="http://dekuyou.ddo.jp/myPage.html" width=100% height=60 scrolling="no" frameborder="0">
+</iframe>
+
+<!-- Thank you!  -->
+</body>
+
+<script type="text/javascript" src="./cpick.js"></script>
+</html>

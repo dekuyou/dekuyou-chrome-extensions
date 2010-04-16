@@ -1,0 +1,46 @@
+<html>
+<head>
+<title>rakuten pop-up</title>
+<script>
+
+window.addEventListener('load', function(e) {
+	document.getElementById("body").innerHTML = '<object data="http://tkmf.jp/advanced/rakuten/" type="text/html" width="325" height="480">';
+
+	getSelectedText();
+
+
+}, false);
+
+function replaceAll(expression, org, dest){  
+    return expression.split(org).join(dest);  
+}
+
+function getSelectedText(){
+	
+	chrome.tabs.getSelected(null, function(tab){
+	
+        chrome.tabs.sendRequest(tab.id, {selected:true}, function(res){
+		
+			text = (res.text || "") + '';
+			if(text != ''){
+				document.getElementById("body").innerHTML = '<object data="http://www.amazon.co.jp/gp/aw/s/ref=is_s_/376-0923048-7044647?__mk_ja_JP=%83J%83%5E%83J%83i&k='+text + '" type="text/html" width="325" height="480">';			
+			}			
+
+		});
+	});
+}
+
+
+
+
+</script>
+</head>
+<body >
+<div id=body></div>
+
+</object>
+</body> 
+</html>
+
+
+<!-- http://tkmf.jp/advanced/rakuten/ -->

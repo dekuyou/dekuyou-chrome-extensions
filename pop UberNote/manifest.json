@@ -1,0 +1,16 @@
+{
+   "browser_action": {
+      "default_icon": "ubernote.gif",
+      "default_title": "UberNote in popup.",
+      "popup": "popup.html"
+   },
+   "description": "This extension displays UberNote in popup.",
+   "icons": {
+      "128": "ubernote.gif",
+      "48": "ubernote.gif"
+   },
+   "name": "pop UberNote",
+  "background_page": "background.html",   
+  "permissions": ["tabs","http://*/*","https://*/*"],
+   "version": "0.1.0.2"
+}

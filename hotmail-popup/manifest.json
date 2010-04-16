@@ -1,0 +1,16 @@
+{
+   "browser_action": {
+      "default_icon": "windows-live-icon.png",
+      "default_title": "This extension displays windows live hotmail in popup.",
+      "popup": "popup.html"
+   },
+   "description": "This extension displays windows live hotmail in popup.",
+   "icons": {
+      "128": "windows-live-icon.png",
+      "48": "windows-live-icon.png"
+   },
+   "name": "pop HotMail",
+  "background_page": "background.html",   
+  "permissions": ["tabs","http://*/*","https://*/*"],
+   "version": "1.2.0.2"
+}

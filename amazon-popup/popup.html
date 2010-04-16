@@ -1,0 +1,114 @@
+<html>
+<head>
+<title>amazon</title>
+<script>
+var background = chrome.extension.getBackgroundPage();
+
+window.addEventListener('load', function(e) {
+	changeLink();
+	goAmazon();
+}, false);
+
+function goAmazon(){
+//	document.getElementById("body").innerHTML = '<object data="http://www.amazon.co.jp/gp/aw/h.html" type="text/html" width="325" height="480">';
+	
+	getSelectedText();
+
+	iframe = document.createElement("iframe");
+	iframe.width = "325";
+	iframe.height = "0"
+//	iframe.frameborder = "0";
+//	iframe.scrolling="no";	
+	document.getElementById("body").appendChild(iframe);
+
+	iframedoc = iframe.contentDocument;
+	
+	iframedoc.writeln('<body ></body>');
+	iframedoc.location.href='http://www.amazon.co.'+(localStorage["domain"]||"jp")+'/gp/aw/h.html';
+
+	iframe.onload = function () {
+		intervalId = setInterval("viwe()", 1); // 1*1000 = 1s
+	}
+
+}
+
+function changeLink(){
+	if((localStorage["domain"]||"jp") == 'jp'){
+		document.getElementById("link").innerHTML = '<a href=http://www.amazon.co.jp/ target=_blank> -> amazon.co.jp.</a>';
+	}else{
+		document.getElementById("link").innerHTML = '<a href=http://www.amazon.co.uk/ target=_blank> -> amazon.co.uk.</a>';
+	}
+
+}
+var intervalId;
+var iframe;
+var i=0;
+
+function viwe(){
+	i=i+5;
+	if(i >'480'){
+		clearInterval(intervalId);
+		i=480;
+		if((localStorage["domain"]||"jp") == 'jp'){
+			selectJp();
+		}else{
+			selectUk();
+		}
+	}
+	iframe.height = i + "";
+
+}
+
+function selectJp(){
+	document.getElementById("load").innerHTML = '<select id=site onChange="changesite(this.options[this.selectedIndex].value);"><option value=jp selected>amazon.co.jp<option value=uk>amazon.co.uk</select>';
+}
+function selectUk(){
+	document.getElementById("load").innerHTML = '<select id=site onChange="changesite(this.options[this.selectedIndex].value);"><option value=jp>amazon.co.jp<option value=uk selected>amazon.co.uk</select>';
+
+}
+function changesite(domain){
+//alert(domain);
+	i=0;
+	localStorage["domain"]=domain;
+	document.getElementById("load").innerHTML = '<img src=loadinfo.net.gif>';
+	
+	document.getElementById("body").innerHTML ='';
+	changeLink();
+	goAmazon();
+}
+
+function getSelectedText(){
+	chrome.tabs.getSelected(null, function(tab){
+        chrome.tabs.sendRequest(tab.id, {selected:true}, function(res){
+			text = (res.text || "") + '';
+			if(text != ''){
+				iframedoc.location.href= 'http://www.amazon.co.'+(localStorage["domain"]||"jp")+'/gp/aw/s/ref=is_s_/376-0923048-7044647?__mk_ja_JP=%83J%83%5E%83J%83i&k='+text;			
+			}
+
+		});
+	});
+}
+</script>
+</head>
+<body >
+<table>
+<tr>
+<td colspan=2>
+<div id=body></div>
+</td>
+</tr>
+<tr>
+<td >
+<span align=left id=link><a href=http://www.amazon.co.jp/ target=_blank> -> amazon.co.jp.</a></span>
+</td>
+<td align=rigth>
+<span align=right id=load><img src=loadinfo.net.gif></span>
+</td>
+
+</tr>
+</table>
+</body> 
+</html>
+
+
+<!-- http://www.amazon.co.jp/gp/aw/s/ref=is_s_/376-0923048-7044647?__mk_ja_JP=%83J%83%5E%83J%83i&k=test -->

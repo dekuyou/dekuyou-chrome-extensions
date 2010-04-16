@@ -1,0 +1,404 @@
+<html>
+<head>
+<title>Hotmail Checker</title>
+
+<script>
+
+var msgid= "";
+var subdomain = "";
+var doinit = "";
+var tab_id='';
+var interval='';
+var nounread = [0,0,0];
+var unread = [255,0,0];
+var newmsg = [255,0,0];
+
+var intervalId;
+
+var icon_grey ="windows-live-logo_grey.png";
+var icon_color ="windows-live-logo.png";
+var default_icon_grey ="windows-live-logo_grey.png";
+var default_icon_color ="windows-live-logo.png";
+
+
+chrome.extension.getVersion = function() { 
+  if (!chrome.extension.version_) { 
+    var xhr = new XMLHttpRequest(); 
+    xhr.open("GET", chrome.extension.getURL('manifest.json'), false); 
+    xhr.onreadystatechange = function() { 
+      if (this.readyState == 4) { 
+        var manifest = JSON.parse(this.responseText); 
+        chrome.extension.version_ = manifest.version; 
+      } 
+   }; 
+   xhr.send(); 
+ } 
+ return chrome.extension.version_; 
+}
+
+
+window.addEventListener('load', function(e) {
+	start();
+	checkversion();
+
+}, false);
+
+function start(){
+	interval = (localStorage['interval'] || "");
+	iconsetting();
+	if(interval == '0'){return;}
+	if( interval.match( /[^0-9]+/ ) || interval == '' ) {
+		interval = localStorage["interval"] = '60';
+	}
+
+//	getHotmail_jp_ddo_dekuyou('');
+//	initHotmailChecker();
+	kidou();
+	
+	intervalId = setInterval("getHotmail_jp_ddo_dekuyou()", interval*1000); // 1*1000 = 1s
+
+}
+function stop(){
+	clearInterval(intervalId);
+	start();
+}
+
+function iconsetting(){
+	if(( localStorage["oldicon"] || "" )+"" == "true"){
+		icon_color = "old_" + icon_color;
+		icon_grey = "old_" + icon_grey;
+		chrome.browserAction.setIcon({path:icon_color});
+		
+	}else{
+		icon_color = default_icon_color;
+		icon_grey = default_icon_grey;
+		chrome.browserAction.setIcon({path:icon_color});
+	
+	}
+}
+
+function checkversion(){
+	var old_ver = ( localStorage["version"] || "" ).split(".");
+	var new_ver = (chrome.extension.getVersion() + "").split(".");
+	
+	if(old_ver[0]+'.'+old_ver[1]+'.'+old_ver[2] != new_ver[0]+'.'+new_ver[1]+'.'+new_ver[2]){
+		chrome.tabs.getAllInWindow(undefined, function(tabs) {
+			for (var i = 0, tab; tab = tabs[i]; i++) {
+				var str = tab.url;
+				if (str.match('dekuyou.ddo.jp/knowledge/')) { 
+					chrome.tabs.update(tab.id, {selected: true});
+					return;
+				}
+			}
+			chrome.tabs.create({url:'http://dekuyou.ddo.jp/knowledge/?chrome/extensions'});
+		});
+		
+		localStorage["version"] = chrome.extension.getVersion();
+		
+		// 255, 0, 0 red
+		chrome.browserAction.setBadgeText({text:"new!"});
+		chrome.browserAction.setBadgeBackgroundColor({color:[0,255,255, 255]});
+		
+	}
+}
+
+function getHotmail_jp_ddo_dekuyou(check){
+	try{
+		if(( localStorage["checkingbadge"] || "" )+"" != "true"){
+
+			chrome.browserAction.setBadgeText({text:"...."});
+		}
+		subdomain = (localStorage["subdomain"] || "");
+		
+		var flg = '0';
+		var xmlhttp = new window.XMLHttpRequest();
+		
+		if(subdomain != ""){
+			xmlhttp.open("GET",'http://' + subdomain + '.mail.live.com/m/folder.aspx',false);
+			try{
+				xmlhttp.send(null);
+				flg = '1';
+			}catch(e3){
+				console.log('xmlhttp.responseText is ???:http://' + subdomain + 'mail.live.com/m/folder.aspx:' + e3); 		
+			}
+		}else {
+			initHotmailChecker();
+			
+		}
+		
+		var text = xmlhttp.responseText;
+
+		
+		if(text == ''){
+			
+			throw new Error("xmlhttp.responseText is null.");
+		
+		
+		}else{
+			localStorage["bodytext"] = text;
+			
+		}
+	}catch(e){
+		console.log("xmlhttp.responseText is ???:" + e); 
+		chrome.browserAction.setIcon({path:icon_grey});
+
+		chrome.browserAction.setBadgeText({text:'?'});
+		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
+
+		
+		return;
+	}
+	
+	// unread msg
+	var startA = text.indexOf("PageTitleColor");
+	var midoku = text.substring(text.indexOf("|", startA), text.indexOf("</span", startA));
+
+	var midokusuunohajimari = midoku.search('[0-9]');
+	// Czech Rep Support.
+	if((midoku.substring(0,midokusuunohajimari)).search('&') >= 0){
+		midoku = midoku.substring(midoku.lastIndexOf (";"));
+		midokusuunohajimari = midoku.search('[0-9]');
+	}
+
+	var midokuB = midoku.substring(midokusuunohajimari);
+	
+	// msgid
+	var startB = text.indexOf("paddedbottom", startA);
+	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
+	var idBadge = "";
+	if(msgid != newid){
+		idBadge = "1"
+		msgid = newid;
+	}
+	
+	try{
+		var hyouji = parseInt(midokuB);
+		
+		// color seting
+		if ((localStorage["nounread"] || "") != ""){
+			nounread = hex2RGB(localStorage["nounread"]);
+		}
+		if ((localStorage["newmsg"] || "") != ""){
+			newmsg = hex2RGB(localStorage["newmsg"]);
+		}
+		if ((localStorage["unread"] || "") != ""){
+			unread = hex2RGB(localStorage["unread"]);
+		}
+		// color seting
+		
+		
+		if (hyouji == '0'){
+			if(( localStorage["nomailicongrey"] || "" )+"" == "true"){
+				chrome.browserAction.setIcon({path:icon_grey});
+			}else{
+				chrome.browserAction.setIcon({path:icon_color});
+			}
+			if(( localStorage["0badge"] || "" )+"" == "true"){
+				chrome.browserAction.setBadgeText({text:''});
+			}else{
+				chrome.browserAction.setBadgeText({text:''+hyouji});
+				chrome.browserAction.setBadgeBackgroundColor({color:[nounread[0],nounread[1],nounread[2], 255]});
+			}
+		}else{
+			chrome.browserAction.setIcon({path:icon_color});
+			
+			
+			if(idBadge == '1'){
+				// 
+				chrome.browserAction.setBadgeText({text:(localStorage["sign"] || "") + hyouji});
+				chrome.browserAction.setBadgeBackgroundColor({color:[newmsg[0],newmsg[1],newmsg[2], 255]});
+				if(( localStorage["usesound"] || "" )+"" == "true"){
+					var file = 'newmsg1.mp3';
+					document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
+				}
+			}else{
+				// 255, 0, 0 red
+				chrome.browserAction.setBadgeText({text:"" + hyouji});
+				chrome.browserAction.setBadgeBackgroundColor({color:[unread[0],unread[1],unread[2], 255]});
+
+			}
+		}
+	}catch(e2){
+		console.log("HTML parse error:" + e2);
+		
+		chrome.browserAction.setIcon({path:icon_grey});
+		chrome.browserAction.setBadgeText({text:'xxxx'});
+		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
+
+	}
+
+}
+
+function saveDomain(str1,str2){
+	localStorage["domain"] = str1;
+	localStorage["subdomain"] = str2;
+
+
+}
+
+function hex2RGB(hex){
+	var s=hex;
+    var t = {
+        "0":0,"1":1,"2":2,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9,
+        "A":10,"B":11,"C":12,"D":13,"E":14,"F":15,
+        "a":10,"b":11,"c":12,"d":13,"e":14,"f":15};
+    var r=0, g=0, b=0;
+    if(s.search(/#[0-9a-fA-F]{6}$/) == 0) {
+        r = t[s.charAt(1)]*16+t[s.charAt(2)];
+        g = t[s.charAt(3)]*16+t[s.charAt(4)];
+        b = t[s.charAt(5)]*16+t[s.charAt(6)];
+    }else{
+		throw new Error("color seting fail.");
+	}
+	
+	return [(r || 0),(g || 0),(b || 0)];
+ 
+}
+
+function goToHotmail() {
+	chrome.tabs.getAllInWindow(undefined, function(tabs) {
+		for (var i = 0, tab; tab = tabs[i]; i++) {
+			var str = tab.url;
+			if (str.match('mail.live.com/')) { 
+				console.log("tab selected : true");
+				chrome.tabs.update(tab.id, {selected: true});
+				chrome.tabs.executeScript(tab.id, {code: 'window.location.reload()'});
+				return;
+			}else if(str.match('login.live.com/')) { 
+				chrome.tabs.update(tab.id, {selected: true});
+				return;
+			}
+		}
+		console.log("create new tab.");
+		chrome.tabs.create({url:'http://mail.live.com/'});
+	});
+}
+
+function initHotmailChecker(){
+	console.log("initializer routine");
+
+	doinit = '1';
+	chrome.tabs.create({url:'http://mail.live.com/m/', selected:false }, function(tab) {
+		tab_id = tab.id;
+		initTimer();
+	});
+	
+}
+
+function initHotmailChecker2(){
+
+	chrome.tabs.get(tab_id, function(tab2) {
+		
+		var checkloginpage = tab2.url.indexOf("login", 0);
+		if(checkloginpage >=0 ){
+			console.log("un loged in "+ tab2.url);
+		}
+		
+			
+		console.log("your local domain is "+ tab2.url);
+		
+		var tmpsubd = tab2.url.substring(7,20);
+		
+		console.log("your local sub domain is "+ tmpsubd);
+		
+		var xmlhttp = new window.XMLHttpRequest();
+		
+		xmlhttp.open("GET",'http://' + tmpsubd + '.mail.live.com/m/folder.aspx',false);
+		try{
+			xmlhttp.send(null);
+		}catch(e3){
+			console.log("xmlhttp.responseText is ???:http://mail.live.com/m/folder.aspx:" + e3); 		
+		}
+		
+		var text = xmlhttp.responseText;
+
+		
+		if(text == ''){
+			console.log("xmlhttp.responseText is null"+ tab2.url);
+			return;
+		}
+		
+			
+		if (text.indexOf("PageTitleColor", 0) <0 ){
+			console.log("not PageTitleColor : " + tmpsubd);
+			
+		}
+		saveDomain('http://' + tmpsubd + '.mail.live.com/' ,  tmpsubd);
+		subdomain = tmpsubd;
+		
+		getHotmail_jp_ddo_dekuyou();
+	
+	});
+
+
+	chrome.tabs.remove(tab_id);
+	tab_id = '';
+
+	doinit = '';
+
+}
+
+var iframedoc;
+function initTimer() {
+	var iframe = document.createElement("iframe");
+	document.getElementById("frame").appendChild(iframe);
+
+	if (document.all) {
+	  iframedoc = iframe.contentWindow.document;
+	} else {
+	  iframedoc = iframe.contentDocument;
+	}
+	iframedoc.writeln("<body></body>");
+	iframedoc.location.href='http://mail.live.com/m/';
+
+	iframe.onload = function () {
+		initHotmailChecker2();
+
+	}
+}
+
+function kidou() {
+	var iframe = document.createElement("iframe");
+	document.getElementById("frame").appendChild(iframe);
+
+	if (document.all) {
+	  iframedoc = iframe.contentWindow.document;
+	} else {
+	  iframedoc = iframe.contentDocument;
+	}
+	iframedoc.writeln("<body></body>");
+	iframedoc.location.href='http://mail.live.com/m/';
+
+	iframe.onload = function () {
+		getHotmail_jp_ddo_dekuyou();
+	}
+}
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+
+	goToHotmail();
+	getHotmail_jp_ddo_dekuyou('');
+	
+
+});
+
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+	if(doinit == '1'){ return; }
+	if ((changeInfo.url + "").match('live.com/')) {
+		getHotmail_jp_ddo_dekuyou('1');
+	}
+});
+
+
+</script>
+
+</head>
+<body>
+ <div id="frame"></div>
+ <div id="hidearea"></div>
+ <canvas id="canvas" width="19" height="19"></canvas>
+</body> 
+</html>
+
+
+<!-- http://ka101w.kaw101.mail.live.com/m/folder.aspx -->

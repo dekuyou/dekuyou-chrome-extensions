@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>add google notebook</title>
+
+<script>
+
+chrome.extension.getVersion = function() { 
+  if (!chrome.extension.version_) { 
+    var xhr = new XMLHttpRequest(); 
+    xhr.open("GET", chrome.extension.getURL('manifest.json'), false); 
+    xhr.onreadystatechange = function() { 
+      if (this.readyState == 4) { 
+        var manifest = JSON.parse(this.responseText); 
+        chrome.extension.version_ = manifest.version; 
+      } 
+   }; 
+   xhr.send(); 
+ } 
+ return chrome.extension.version_; 
+}
+
+
+window.addEventListener('load', function(e) {
+	var old_ver = ( localStorage["version"] || "" ).split(".");
+	var new_ver = (chrome.extension.getVersion() + "").split(".");
+	
+	if(old_ver[0]+'.'+old_ver[1]+'.'+old_ver[2] != new_ver[0]+'.'+new_ver[1]+'.'+new_ver[2]){
+		chrome.tabs.getAllInWindow(undefined, function(tabs) {
+			for (var i = 0, tab; tab = tabs[i]; i++) {
+				var str = tab.url;
+				if (str.match('dekuyou.ddo.jp/knowledge/')) { 
+					chrome.tabs.update(tab.id, {selected: true});
+					return;
+				}
+			}
+			chrome.tabs.create({url:'http://dekuyou.ddo.jp/knowledge/?chrome/extensions'});
+		});
+		
+		localStorage["version"] = chrome.extension.getVersion();
+		
+		// 255, 0, 0 red
+		chrome.browserAction.setBadgeText({text:"new!"});
+		chrome.browserAction.setBadgeBackgroundColor({color:[0,255,255, 255]});
+		
+	}
+}, false);
+
+
+
+function addGoogleNotebook(tab) {
+	var protocol = (localStorage["useHttps"])?'https':'http';
+
+	var upUrl = "javascript:(function(){var w=window;var d=document;var g=w.open('about:blank','gnotesWin','location=0,menubar=0,scrollbars=0,status=0,toolbar=0,width=300,height=300,resizable');var s=d.createElement('script');s.setAttribute('src','"+protocol+"://www.google.com/notebook/bookmarkletPoster?hl=ja&zx='+(new Date()).valueOf());d.body.appendChild(s);}).call({});";
+  if(upUrl != tab.url) {
+    chrome.tabs.update(tab.id, {'url': upUrl, selected: true});
+  }
+}
+
+
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+  addGoogleNotebook(tab);
+});
+
+
+
+
+
+</script>
+
+</head>
+<body >
+
+
+</body> 
+</html>
+<!-- 	var upUrl = "javascript:(function(){var w=window;var d=document;var g=w.open('about:blank','gnotesWin','location=0,menubar=0,scrollbars=0,status=0,toolbar=0,width=300,height=300,resizable');var s=d.createElement('script');s.setAttribute('src','"+protocol+"://www.google.com/notebook/bookmarkletPoster?hl=ja&zx='+(new Date()).valueOf());d.body.appendChild(s);w.setTimeout(function(){w.blur();g.focus();}, 10*1000)}).call({});";
+ -->

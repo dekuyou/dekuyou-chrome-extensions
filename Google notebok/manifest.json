@@ -1,0 +1,14 @@
+{
+  "name": "add 2 Google Notebook",
+  "version": "1.0.0.4",
+  "description": "Current page add to Google Notebook.",
+  "icons": { "48": "google-notebook.png",
+          "128": "google-notebook.png" },  
+  "background_page": "background.html",
+  "options_page": "options.html",
+  "browser_action": {
+    "default_title": "add to Google Notebook!",
+    "default_icon": "favicon.ico"
+  },
+  "permissions": [ "tabs","http://*/*","https://*/*" ]
+}

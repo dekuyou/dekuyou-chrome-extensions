@@ -1,0 +1,130 @@
+<html lang=ja>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>yahoomail</title>
+
+
+<script>
+
+
+var background = chrome.extension.getBackgroundPage();
+var localurl;
+
+window.addEventListener('load', function(e) {
+
+	iframe = document.createElement("iframe");
+	iframe.width = "325";
+	iframe.height = "0"
+//	iframe.frameborder = "0";
+//	iframe.scrolling="no";	
+	document.getElementById("body").appendChild(iframe);
+
+	iframedoc = iframe.contentDocument;
+	
+	iframedoc.writeln('<body ></body>');
+
+	var xmlhttp = new window.XMLHttpRequest();
+	
+	if(localStorage['domain']){
+		xmlhttp.open("GET",localStorage['domain'] + "ipn/",false);
+		try{
+			xmlhttp.send(null);
+			
+			var text = xmlhttp.responseText;
+			
+			if(text.indexOf('var action = "folders"') > 0){
+
+				addBody();
+				return;
+			}
+		}catch(e3){
+			console.log('xmlhttp.responseText is ???:' + localStorage['domain'] + 'ipn/:' + e3); 		
+		}
+	}
+	
+
+	background.initYmailChecker();
+	
+	intervalId = setInterval("getYmail_jp_ddo_dekuyou()", 5*1000); // 1*1000 = 1s
+
+
+
+}, false);
+var interval='';
+
+function getYmail_jp_ddo_dekuyou(){
+	
+	if(localStorage['domain']){
+		clearInterval(intervalId);
+
+		addBody();
+	}else{
+		counter++;
+	}
+
+}
+
+
+function addBody(localurl2){
+
+	localurl = (localStorage['domain'] || "");
+
+//	document.getElementById("yahoo").innerHTML = '<object data="'+ localurl +'ipn/" type="text/html" width="325" height="480"></object>';
+
+	iframedoc.location.href= localurl +'ipn/';
+
+	iframe.onload = function () {
+		intervalId = setInterval("viwe()", 1); // 1*1000 = 1s
+	}
+	
+	
+	
+}
+
+var intervalId;
+var iframe;
+var i=0
+
+function viwe(){
+	i=i+5;
+	iframe.height = i + "";
+	if(i >'480'){
+		clearInterval(intervalId);
+		document.getElementById("load").innerHTML = '';
+
+	}
+}
+
+
+</script>
+</head>
+<body >
+<!--
+<div id=yahoo><img src=loadinfo.net.gif></div>
+-->
+<table>
+<tr>
+<td colspan=2>
+<div id=body></div>
+</td>
+</tr>
+<tr>
+<td>
+<span align=left><a href=http://mail.yahoo.co.jp/ target=_blank> -> PCサイト</a></span>
+</td>
+<td align=rigth>
+<span align=right id=load><img src=loadinfo.net.gif></span>
+</td>
+
+</tr>
+</table>
+
+
+</body> 
+</html>
+
+
+<!-- http://login.yahoo.co.jp/config/login_verify2?.src=ym -->
+<!-- http://jp.f32.mail.yahoo.co.jp/ipn/ -->

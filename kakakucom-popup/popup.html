@@ -1,0 +1,72 @@
+<html>
+<head>
+<title>kakakucom</title>
+<script>
+
+window.addEventListener('load', function(e) {
+//	document.getElementById("body").innerHTML = '<object data="http://m.kakaku.com/" type="text/html" width="325" height="480">';
+	
+	getSelectedText();
+	iframe = document.createElement("iframe");
+	iframe.width = "325";
+	iframe.height = "0"
+//	iframe.frameborder = "0";
+//	iframe.scrolling="no";	
+	document.getElementById("body").appendChild(iframe);
+
+	iframedoc = iframe.contentDocument;
+	
+	iframedoc.writeln('<body ></body>');
+	iframedoc.location.href='http://m.kakaku.com/';
+
+	iframe.onload = function () {
+		intervalId = setInterval("viwe()", 1); // 1*1000 = 1s
+	}
+	
+}, false);
+var intervalId;
+var iframe;
+var i=0
+
+function viwe(){
+	i=i+5;
+	iframe.height = i + "";
+	if(i >'480'){
+		clearInterval(intervalId);
+		document.getElementById("load").innerHTML = '';
+
+	}
+}
+
+function getSelectedText(){
+	chrome.tabs.getSelected(null, function(tab){
+        chrome.tabs.sendRequest(tab.id, {selected:true}, function(res){
+			text = (res.text || "") + '';
+			if(text != ''){
+				iframedoc.location.href='http://m.kakaku.com/search/search.asp?query='+text;
+			}
+
+		});
+	});
+}
+</script>
+</head>
+<body >
+<table>
+<tr>
+<td colspan=2>
+<div id=body></div>
+</td>
+</tr>
+<tr>
+<td>
+<span align=left><a href=http://kakaku.com/ target=_blank> -> kakaku.com.</a></span>
+</td>
+<td align=rigth>
+<span align=right id=load><img src=loadinfo.net.gif></span>
+</td>
+
+</tr>
+</table>
+</body> 
+</html>

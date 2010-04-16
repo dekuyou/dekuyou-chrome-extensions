@@ -1,0 +1,23 @@
+{
+  "name": "Drag and Scroll",
+  "version": "0.0.1",
+  "description": "Drag and Scroll.",
+    "icons": { "48": "DragAndScroll.png",
+          "128": "DragAndScroll.png" },
+  "browser_action": {
+    "default_title": "Drag And Scroll",
+    "default_icon": "DragAndScroll.png"
+ },
+  "permissions": [ "tabs","http://*/*","https://*/*"],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "dragandscroll.js"
+      ]
+    }
+  ]
+}

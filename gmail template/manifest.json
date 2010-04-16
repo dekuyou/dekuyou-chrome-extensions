@@ -1,0 +1,13 @@
+{
+  "name": "Ｇｍａｉｌテンプレートブックマーク作成機",
+  "version": "0.0.0.2",
+  "description": "Ｇｍａｉｌの送信メール用テンプレートを作成してブックマークに登録します。",
+  "options_page": "options.html",
+  "background_page": "background.html",
+  "browser_action": {
+    "default_title": "Gamil template.",
+    "default_icon": "images19.jpg",
+    "popup": "options.html"
+  },
+  "permissions": ["tabs","bookmarks","http://*/*","https://*/*"]
+}
