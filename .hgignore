@@ -5,3 +5,4 @@ glob:*.crx
 glob:*.pem
 glob:tmp/
 glob:ƒMƒƒƒ‰ƒŠ[/
+glob:test/
