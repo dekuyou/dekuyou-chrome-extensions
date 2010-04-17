@@ -4,7 +4,7 @@
 
 <script>
 
-var msgid= "";
+var msgid= (localStorage["msgid"] || "");
 var subdomain = "";
 var doinit = "";
 var tab_id='';
@@ -165,10 +165,11 @@ function getHotmail_jp_ddo_dekuyou(check){
 	// msgid
 	var startB = text.indexOf("paddedbottom", startA);
 	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
+	// 新着message判定
 	var idBadge = "";
-	if(msgid != newid){
+	if(msgid < newid){
 		idBadge = "1"
-		msgid = newid;
+		msgid = localStorage["msgid"] = newid;
 	}
 	
 	try{
@@ -209,6 +210,7 @@ function getHotmail_jp_ddo_dekuyou(check){
 				chrome.browserAction.setBadgeBackgroundColor({color:[newmsg[0],newmsg[1],newmsg[2], 255]});
 				if(( localStorage["usesound"] || "" )+"" == "true"){
 					var file = 'newmsg1.mp3';
+					// Audioタグに変更したい。
 					document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
 				}
 			}else{
