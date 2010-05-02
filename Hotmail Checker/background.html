@@ -167,7 +167,7 @@ function getHotmail_jp_ddo_dekuyou(check){
 	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
 	// 新着message判定
 	var idBadge = "";
-	if(msgid < newid){
+	if(msgid != newid){
 		idBadge = "1"
 		msgid = localStorage["msgid"] = newid;
 	}
