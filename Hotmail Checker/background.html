@@ -209,7 +209,7 @@ function getHotmail_jp_ddo_dekuyou(check){
 				chrome.browserAction.setBadgeText({text:(localStorage["sign"] || "") + hyouji});
 				chrome.browserAction.setBadgeBackgroundColor({color:[newmsg[0],newmsg[1],newmsg[2], 255]});
 				if(( localStorage["usesound"] || "" )+"" == "true"){
-					var file = 'newmsg1.mp3';
+					var file = (localStorage["soundpath"] || 'newmsg1.mp3');
 					// Audioタグに変更したい。
 					document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
 				}
@@ -391,6 +391,12 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
 	}
 });
 
+
+function test_sound(file){
+document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
+
+
+}
 
 </script>
 
