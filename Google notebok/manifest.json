@@ -1,6 +1,6 @@
 {
   "name": "add 2 Google Notebook",
-  "version": "1.0.0.4",
+  "version": "1.0.0.5",
   "description": "Current page add to Google Notebook.",
   "icons": { "48": "google-notebook.png",
           "128": "google-notebook.png" },  
