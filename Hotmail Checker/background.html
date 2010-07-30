@@ -149,11 +149,13 @@ function getHotmail_jp_ddo_dekuyou(check){
 		return;
 	}
 	
-	// unread msg
-	var startA = text.indexOf("PageTitleColor");
+	// unread msg PageTitle
+ //	var startA = text.indexOf("PageTitleColor");
+	var startA = text.indexOf("PageTitle");
 	
 	
-	var midoku = text.substring(text.indexOf("|", startA), text.indexOf("</span", startA));
+//	var midoku = text.substring(text.indexOf("|", startA), text.indexOf("</span", startA));
+	var midoku = text.substring(startA, text.indexOf("</span", startA));
 
 	var midokusuunohajimari = midoku.search('[0-9]');
 	// Czech Rep Support.
@@ -175,10 +177,13 @@ function getHotmail_jp_ddo_dekuyou(check){
 	}
 	
 	try{
-		var hyouji = '0';
-		if(startA > 0){
-			hyouji = parseInt(midokuB);
+		var hyouji =  parseInt(midokuB);
+		
+		if(midokusuunohajimari < 0){
+			hyouji = "0";
 		}
+		
+		
 		// color seting
 		if ((localStorage["nounread"] || "") != ""){
 			nounread = hex2RGB(localStorage["nounread"]);
