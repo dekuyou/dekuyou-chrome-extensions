@@ -166,9 +166,13 @@ function getHotmail_jp_ddo_dekuyou(check){
 
 	var midokuB = midoku.substring(midokusuunohajimari);
 	
-	// msgid
-	var startB = text.indexOf("paddedbottom", startA);
-	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
+	// msgid MessageList_SubjectLink ="viewmessage.aspx?mid=
+// 	var startB = text.indexOf("paddedbottom", startA);
+	 	var startB = text.indexOf("MessageList_SubjectLink", startA);
+//	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
+	var newid = text.substring(text.indexOf("?mid=", startB)+5 , text.indexOf("&amp;state=", startB));
+	
+
 	// 新着message判定
 	var idBadge = "";
 	if(msgid != newid){
