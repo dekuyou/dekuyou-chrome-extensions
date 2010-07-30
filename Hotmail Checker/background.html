@@ -385,16 +385,21 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 	goToHotmail();
 	getHotmail_jp_ddo_dekuyou('');
+	stop();
 	
 
 });
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo) {
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	if(doinit == '1'){ return; }
 	if ((changeInfo.url + "").match('live.com/')) {
 		getHotmail_jp_ddo_dekuyou('1');
+		stop();
 	}
 });
+
+
+
 
 
 function test_sound(file){
