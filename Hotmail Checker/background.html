@@ -151,6 +151,8 @@ function getHotmail_jp_ddo_dekuyou(check){
 	
 	// unread msg
 	var startA = text.indexOf("PageTitleColor");
+	
+	
 	var midoku = text.substring(text.indexOf("|", startA), text.indexOf("</span", startA));
 
 	var midokusuunohajimari = midoku.search('[0-9]');
@@ -173,8 +175,10 @@ function getHotmail_jp_ddo_dekuyou(check){
 	}
 	
 	try{
-		var hyouji = parseInt(midokuB);
-		
+		var hyouji = '0';
+		if(startA > 0){
+			hyouji = parseInt(midokuB);
+		}
 		// color seting
 		if ((localStorage["nounread"] || "") != ""){
 			nounread = hex2RGB(localStorage["nounread"]);
