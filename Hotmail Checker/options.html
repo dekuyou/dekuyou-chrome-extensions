@@ -53,10 +53,17 @@ function save_hide_options(){
 }
 
 function save_buttonicon_options(){
-	if(document.getElementById("icon2").checked){
-		localStorage["oldicon"] = document.getElementById("icon2").checked;	
+	if(document.getElementById("icon1").checked){
+		localStorage["icon"] = '1';
+		
+	}else if(document.getElementById("icon2").checked){
+		localStorage["icon"] = '2';
+
+	}else if(document.getElementById("icon3").checked){
+		localStorage["icon"] = '3';	
+
 	}else{
-		 localStorage.removeItem('oldicon');
+		 localStorage["icon"] = '1';
 	}
 
 	viewStatus("status_icon","Options Saved.");
@@ -125,9 +132,21 @@ function restore_options() {
 		document.getElementById("s1").checked = true;
 	}
 	
-	if(( localStorage["oldicon"] || "" )+"" == "true"){
+//	if(( localStorage["oldicon"] || "" )+"" == "true"){
+//		document.getElementById("icon2").checked = true;
+//	}
+	if(( localStorage["icon"] || "" )+"" == "1"){
+		document.getElementById("icon1").checked = true;
+	}else if(( localStorage["icon"] || "" )+"" == "2"){
 		document.getElementById("icon2").checked = true;
+	}else if(( localStorage["icon"] || "" )+"" == "3"){
+		document.getElementById("icon3").checked = true;
 	}
+ 
+
+	
+	
+	
     document.getElementById("sign").value = ( localStorage["sign"] || "" );
 
     document.getElementById("domain").innerHTML = ( localStorage["domain"] || "" );
@@ -186,7 +205,7 @@ no mail icon is grey: <input type="checkbox" name=f1 id=g1 value=''>&nbsp;
 
 
 
-icon : <img src=windows-live-logo.png><input type="radio" name="icon" id="icon1" value="use default icon" checked><img src=old_windows-live-logo.png><input type="radio" name="icon" id="icon2" value="use Old icon"><button onclick="save_buttonicon_options()">Change Button image.</button>
+icon : <img src=windows-live-logo.png><input type="radio" name="icon" id="icon1" value="use default icon" checked><img src=old_windows-live-logo.png><input type="radio" name="icon" id="icon2" value="use Old icon"><img src=live_hotmail_w4_logo.png><input type="radio" name="icon" id="icon3" value="use New icon"><button onclick="save_buttonicon_options()">Change Button image.</button>
 <div id="status_icon" ></div>
 <br>
 

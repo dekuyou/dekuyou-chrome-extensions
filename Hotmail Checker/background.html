@@ -21,6 +21,14 @@ var default_icon_grey ="windows-live-logo_grey.png";
 var default_icon_color ="windows-live-logo.png";
 
 
+var icon_color_3 = 'live_hotmail_w4_logo.png';
+var icon_grey_3 = 'live_hotmail_w4_logo_grey.png';
+var icon_color_2 = 'old_windows-live-logo.png';
+var icon_grey_2 = 'old_windows-live-logo_grey.png';
+var icon_color_1 = 'windows-live-logo.png';
+var icon_grey_1 = 'windows-live-logo_grey.png';
+
+
 chrome.extension.getVersion = function() { 
   if (!chrome.extension.version_) { 
     var xhr = new XMLHttpRequest(); 
@@ -64,18 +72,32 @@ function stop(){
 }
 
 function iconsetting(){
-	if(( localStorage["oldicon"] || "" )+"" == "true"){
-		icon_color = "old_" + icon_color;
-		icon_grey = "old_" + icon_grey;
-		chrome.browserAction.setIcon({path:icon_color});
-		
-	}else{
-		icon_color = default_icon_color;
-		icon_grey = default_icon_grey;
-		chrome.browserAction.setIcon({path:icon_color});
-	
-	}
+//	if(( localStorage["oldicon"] || "" )+"" == "true"){
+//		icon_color = "old_" + icon_color;
+//		icon_grey = "old_" + icon_grey;
+//		chrome.browserAction.setIcon({path:icon_color});
+//	}else{
+//		icon_color = default_icon_color;
+//		icon_grey = default_icon_grey;
+//		chrome.browserAction.setIcon({path:icon_color});
+//	}
+
+	if(( localStorage["icon"] || "" )+"" == "1"){
+		icon_color = icon_color_1;
+		icon_grey = icon_grey_1;
+	}else if(( localStorage["icon"] || "" )+"" == "2"){
+		icon_color = icon_color_2;
+		icon_grey = icon_grey_2;
+	}else if(( localStorage["icon"] || "" )+"" == "3"){
+		icon_color = icon_color_3;
+		icon_grey = icon_grey_3;
+	} 
+	chrome.browserAction.setIcon({path:icon_color});
+
 }
+
+
+
 
 function checkversion(){
 	var old_ver = ( localStorage["version"] || "" ).split(".");
@@ -98,6 +120,7 @@ function checkversion(){
 		// 255, 0, 0 red
 		chrome.browserAction.setBadgeText({text:"new!"});
 		chrome.browserAction.setBadgeBackgroundColor({color:[0,255,255, 255]});
+		
 		
 	}
 }
