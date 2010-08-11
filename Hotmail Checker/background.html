@@ -14,6 +14,7 @@ var unread = [255,0,0];
 var newmsg = [255,0,0];
 
 var intervalId;
+var domainAndFolder='.mail.live.com/md/folder.aspx';
 
 var icon_grey ="windows-live-logo_grey.png";
 var icon_color ="windows-live-logo.png";
@@ -46,7 +47,7 @@ chrome.extension.getVersion = function() {
 
 
 window.addEventListener('load', function(e) {
-	start();
+//	start();
 	checkversion();
 
 }, false);
@@ -61,7 +62,7 @@ function start(){
 
 //	getHotmail_jp_ddo_dekuyou('');
 //	initHotmailChecker();
-	kidou();
+//	kidou();
 	
 	intervalId = setInterval("getHotmail_jp_ddo_dekuyou()", interval*1000); // 1*1000 = 1s
 
@@ -137,7 +138,7 @@ function getHotmail_jp_ddo_dekuyou(check){
 		var xmlhttp = new window.XMLHttpRequest();
 		
 		if(subdomain != ""){
-			xmlhttp.open("GET",'http://' + subdomain + '.mail.live.com/m/folder.aspx',false);
+			xmlhttp.open("GET",'http://' + subdomain + domainAndFolder,false);
 			try{
 				xmlhttp.send(null);
 				flg = '1';
@@ -317,7 +318,7 @@ function initHotmailChecker(){
 	console.log("initializer routine");
 
 	doinit = '1';
-	chrome.tabs.create({url:'http://mail.live.com/m/', selected:false }, function(tab) {
+	chrome.tabs.create({url:'http://mail.live.com/md/', selected:false }, function(tab) {
 		tab_id = tab.id;
 		initTimer();
 	});
@@ -342,7 +343,7 @@ function initHotmailChecker2(){
 		
 		var xmlhttp = new window.XMLHttpRequest();
 		
-		xmlhttp.open("GET",'http://' + tmpsubd + '.mail.live.com/m/folder.aspx',false);
+		xmlhttp.open("GET",'http://' + tmpsubd + domainAndFolder,false);
 		try{
 			xmlhttp.send(null);
 		}catch(e3){
@@ -424,7 +425,9 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	if(doinit == '1'){ return; }
-	if ((changeInfo.url + "").match('live.com/')) {
+//	if ((changeInfo.url + "").match('live.com/')) {
+//(localStorage["subdomain"] || "")
+	if ((changeInfo.url + "").match((localStorage["subdomain"] || ""))) {
 		getHotmail_jp_ddo_dekuyou('1');
 		stop();
 	}
