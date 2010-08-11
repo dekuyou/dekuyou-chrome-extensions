@@ -427,7 +427,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	if(doinit == '1'){ return; }
 //	if ((changeInfo.url + "").match('live.com/')) {
 //(localStorage["subdomain"] || "")
-	if ((changeInfo.url + "").match((localStorage["subdomain"] || ""))) {
+	if ((changeInfo.url + "").match((localStorage["subdomain"] || "")+".mail.live.com/default.aspx")) {
 		getHotmail_jp_ddo_dekuyou('1');
 		stop();
 	}
