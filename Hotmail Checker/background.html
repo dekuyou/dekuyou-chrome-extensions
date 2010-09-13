@@ -47,9 +47,10 @@ chrome.extension.getVersion = function() {
 
 
 window.addEventListener('load', function(e) {
-//	start();
 	checkversion();
-
+	kidou();
+	start();
+	
 }, false);
 
 function start(){
@@ -59,10 +60,6 @@ function start(){
 	if( interval.match( /[^0-9]+/ ) || interval == '' ) {
 		interval = localStorage["interval"] = '60';
 	}
-
-//	getHotmail_jp_ddo_dekuyou('');
-//	initHotmailChecker();
-//	kidou();
 	
 	intervalId = setInterval("getHotmail_jp_ddo_dekuyou()", interval*1000); // 1*1000 = 1s
 
@@ -73,15 +70,7 @@ function stop(){
 }
 
 function iconsetting(){
-//	if(( localStorage["oldicon"] || "" )+"" == "true"){
-//		icon_color = "old_" + icon_color;
-//		icon_grey = "old_" + icon_grey;
-//		chrome.browserAction.setIcon({path:icon_color});
-//	}else{
-//		icon_color = default_icon_color;
-//		icon_grey = default_icon_grey;
-//		chrome.browserAction.setIcon({path:icon_color});
-//	}
+
 
 	if(( localStorage["icon"] || "" )+"" == "1"){
 		icon_color = icon_color_1;
@@ -127,6 +116,26 @@ function checkversion(){
 }
 
 function getHotmail_jp_ddo_dekuyou(check){
+	
+	// ログインしようとしていたら、チェックしない。
+	chrome.windows.getCurrent(function(window){
+		current_window = window;
+		chrome.tabs.getSelected(current_window.id, function(tab) {
+			var str = tab.url;
+			if (str.match('login.live.com/ppsecure/post.srf')) { 
+				console.log("Because log in is being processed, it doesn't check it. ");
+				return;
+			}else{
+				getHotmail_jp_ddo_dekuyou_main();
+			}
+		
+		});
+	
+	});
+}
+	
+function getHotmail_jp_ddo_dekuyou_main(check){
+
 	try{
 		if(( localStorage["checkingbadge"] || "" )+"" != "true"){
 
@@ -173,12 +182,9 @@ function getHotmail_jp_ddo_dekuyou(check){
 		return;
 	}
 	
-	// unread msg PageTitle
- //	var startA = text.indexOf("PageTitleColor");
 	var startA = text.indexOf("PageTitle");
 	
 	
-//	var midoku = text.substring(text.indexOf("|", startA), text.indexOf("</span", startA));
 	var midoku = text.substring(startA, text.indexOf("</span", startA));
 
 	var midokusuunohajimari = midoku.search('[0-9]');
@@ -190,10 +196,7 @@ function getHotmail_jp_ddo_dekuyou(check){
 
 	var midokuB = midoku.substring(midokusuunohajimari);
 	
-	// msgid MessageList_SubjectLink ="viewmessage.aspx?mid=
-// 	var startB = text.indexOf("paddedbottom", startA);
-	 	var startB = text.indexOf("MessageList_SubjectLink", startA);
-//	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
+ 	var startB = text.indexOf("MessageList_SubjectLink", startA);
 	var newid = text.substring(text.indexOf("?mid=", startB)+5 , text.indexOf("&amp;state=", startB));
 	
 
@@ -247,8 +250,7 @@ function getHotmail_jp_ddo_dekuyou(check){
 				chrome.browserAction.setBadgeBackgroundColor({color:[newmsg[0],newmsg[1],newmsg[2], 255]});
 				if(( localStorage["usesound"] || "" )+"" == "true"){
 					var file = (localStorage["soundpath"] || 'newmsg1.mp3');
-					// Audioタグに変更したい。
-//					document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
+					// Audio
 					document.getElementById("hidearea").innerHTML ="<audio src='"+file+"' id='audio_id' autoplay autobuffer></audio>";
 				}
 			}else{
@@ -425,8 +427,6 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
 chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 	if(doinit == '1'){ return; }
-//	if ((changeInfo.url + "").match('live.com/')) {
-//(localStorage["subdomain"] || "")
 	if ((changeInfo.url + "").match((localStorage["subdomain"] || "")+".mail.live.com/default.aspx")) {
 		getHotmail_jp_ddo_dekuyou('1');
 		stop();
@@ -438,7 +438,6 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
 
 function test_sound(file){
-	//document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
 	document.getElementById("hidearea").innerHTML ="<audio src='"+file+"' id='audio_id' autoplay autobuffer></audio>";
 
 }
