@@ -85,12 +85,18 @@ function addBody(localurl2){
 
 var intervalId;
 var iframe;
-var i=0
-
+var i=0;
+var heightPopup;
 function viwe(){
 	i=i+5;
 	iframe.height = i + "";
-	if(i >'480'){
+	
+	if(( localStorage["height"] || "" )+"" == "true"){
+		heightPopup = '400';
+	}else{
+		heightPopup = '480';
+	}
+	if(i >heightPopup){
 		clearInterval(intervalId);
 		document.getElementById("load").innerHTML = '';
 

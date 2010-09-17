@@ -68,6 +68,15 @@ function save_sound_options(){
 }
 
 
+
+function height_options(){
+
+    localStorage["height"] = document.getElementById("height1").checked;
+	viewStatus("status_height","Options Saved.");
+
+	
+}
+
 function domain_Initialization(){
     //
 	localStorage.removeItem("domain");
@@ -100,7 +109,9 @@ function restore_options() {
 	if(( localStorage["checkingbadge"] || "" )+"" == "true"){
 		document.getElementById("h2").checked = true;
 	}
-	
+	if(( localStorage["height"] || "" )+"" == "true"){
+		document.getElementById("height1").checked = true;
+	}	
 //	if(( localStorage["nomailicongrey"] || "" )+"" == "true"){
 //		document.getElementById("g1").checked = true;
 //	}
@@ -153,13 +164,13 @@ new msg badge color :<input type="text" name="c3" size="6" id="t3" class="html5j
 no mail icon is grey: <input type="checkbox" name=f1 id=g1 value=''>&nbsp;
 <button onclick="save_nomailicongrey_options()">Change no mail icon.</button>
 <div id="status_nomailicon" ></div>
-
+-->
 <br>
 
-use Sound : <input type="checkbox" name=t1 id=s1 value=''>&nbsp;
-<button onclick="save_sound_options()">Change use Sound.</button>
-<div id="status_sound" ></div>
--->
+ポップアップの高さを低く表示: <input type="checkbox" name=hi1 id=height1 value=''>&nbsp;
+<button onclick="height_options()">高さ設定変更.</button>
+<div id="status_height" ></div>
+
 
 <br>
 
