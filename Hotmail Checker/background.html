@@ -253,6 +253,22 @@ function getHotmail_jp_ddo_dekuyou_main(check){
 					// Audio
 					document.getElementById("hidearea").innerHTML ="<audio src='"+file+"' id='audio_id' autoplay autobuffer></audio>";
 				}
+				
+				if(( localStorage["usedesktopnotify"] || "" )+"" == "true"){
+					
+					//desktop notify
+					var notification = webkitNotifications.createNotification(
+						icon_color,  // icon url - can be relative
+						'Hotmai Checker',  // notification title
+						'You\'ve Got Mail...'  // notification body text
+					);
+					notification.show();
+					setTimeout(function(){
+						notification.cancel();
+					},5000);
+				}
+			
+			
 			}else{
 				// 255, 0, 0 red
 				chrome.browserAction.setBadgeText({text:"" + hyouji});

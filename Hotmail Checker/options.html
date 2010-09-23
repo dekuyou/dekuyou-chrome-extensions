@@ -91,6 +91,14 @@ function save_sound_options(){
 }
 
 
+function save_desktopnotify_options(){
+
+    localStorage["usedesktopnotify"] = document.getElementById("dn1").checked;
+	viewStatus("status_desktopnotify","Options Saved.");
+
+	
+}
+
 function domain_Initialization(){
     //
 	localStorage.removeItem("domain");
@@ -130,6 +138,10 @@ function restore_options() {
 
 	if(( localStorage["usesound"] || "" )+"" == "true"){
 		document.getElementById("s1").checked = true;
+	}
+	
+	if(( localStorage["usedesktopnotify"] || "" )+"" == "true"){
+		document.getElementById("dn1").checked = true;
 	}
 	
 //	if(( localStorage["oldicon"] || "" )+"" == "true"){
@@ -215,6 +227,19 @@ use Sound : <input type="checkbox" name=t1 id=s1 value=''><input id="soundpath" 
 <div id="status_sound" ></div>
 
 <br>
+
+
+
+use Desktop Notify : <input type="checkbox" name=d1 id=dn1 value=''>
+<button onclick="save_desktopnotify_options()">Change use Desktop Notify.</button>
+<div id="status_desktopnotify" ></div>
+
+<br>
+
+<br>
+
+<br>
+
 
 
 Your Domain :<span id="domain"></span><button onclick="domain_Initialization()">Initialization.</button>
