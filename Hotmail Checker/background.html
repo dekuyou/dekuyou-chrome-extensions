@@ -29,6 +29,7 @@ var icon_grey_2 = 'old_windows-live-logo_grey.png';
 var icon_color_1 = 'windows-live-logo.png';
 var icon_grey_1 = 'windows-live-logo_grey.png';
 
+var xmlhttp;
 
 chrome.extension.getVersion = function() { 
   if (!chrome.extension.version_) { 
@@ -143,25 +144,43 @@ function getHotmail_jp_ddo_dekuyou_main(check){
 		}
 		subdomain = (localStorage["subdomain"] || "");
 		
-		var flg = '0';
-		var xmlhttp = new window.XMLHttpRequest();
+		xmlhttp = new window.XMLHttpRequest();
 		
 		if(subdomain != ""){
-			xmlhttp.open("GET",'http://' + subdomain + domainAndFolder,false);
-			try{
-				xmlhttp.send(null);
-				flg = '1';
-			}catch(e3){
-				console.log('xmlhttp.responseText is ???:http://' + subdomain + 'mail.live.com/m/folder.aspx:' + e3); 		
-			}
+			xmlhttp.open("GET",'http://' + subdomain + domainAndFolder,true);
+			xmlhttp.onreadystatechange = function() {
+				if (this.readyState == 4) { 
+					countMainLogic();
+				}
+			};
+			xmlhttp.send(null);
+ 		
 		}else {
 			initHotmailChecker();
 			
 		}
 		
-		var text = xmlhttp.responseText;
+		
+	}catch(e){
+		console.log("xmlhttp.responseText is ???:" + e); 
+		chrome.browserAction.setIcon({path:icon_grey});
+
+		chrome.browserAction.setBadgeText({text:'?'});
+		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
 
 		
+		return;
+	}
+}
+
+
+
+function countMainLogic(check){
+	try{
+		
+		var text = xmlhttp.responseText;
+
+		console.log("responseText:"+ text);
 		if(text == ''){
 			
 			throw new Error("xmlhttp.responseText is null.");
@@ -170,6 +189,16 @@ function getHotmail_jp_ddo_dekuyou_main(check){
 		}else{
 			localStorage["bodytext"] = text;
 			
+		}
+
+
+		var startA = text.indexOf("PageTitle");
+		
+		if(startA < 0){
+			
+			throw new Error("xmlhttp.responseText is null.");
+		
+		
 		}
 	}catch(e){
 		console.log("xmlhttp.responseText is ???:" + e); 
@@ -182,9 +211,7 @@ function getHotmail_jp_ddo_dekuyou_main(check){
 		return;
 	}
 	
-	var startA = text.indexOf("PageTitle");
-	
-	
+
 	var midoku = text.substring(startA, text.indexOf("</span", startA));
 
 	var midokusuunohajimari = midoku.search('[0-9]');
@@ -251,8 +278,8 @@ function getHotmail_jp_ddo_dekuyou_main(check){
 				if(( localStorage["usesound"] || "" )+"" == "true"){
 					var file = (localStorage["soundpath"] || 'newmsg1.mp3');
 					// Audio
-					document.getElementById("hidearea").innerHTML ="<audio src='"+file+"' id='audio_id' autoplay autobuffer></audio>";
-				}
+					ring_sound(file);
+					}
 				
 				if(( localStorage["usedesktopnotify"] || "" )+"" == "true"){
 					
@@ -453,8 +480,9 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 
 
 
-function test_sound(file){
-	document.getElementById("hidearea").innerHTML ="<audio src='"+file+"' id='audio_id' autoplay autobuffer></audio>";
+function ring_sound(filePath){
+	document.getElementById("hidearea").innerHTML ="<audio src='"+filePath+"' id='audio_id' autobuffer></audio>";
+	document.getElementById("audio_id").play();
 
 }
 
