@@ -49,15 +49,20 @@ chrome.extension.getVersion = function() {
 
 window.addEventListener('load', function(e) {
 	checkversion();
+
+	subdomain = (localStorage['subdomain'] || "");
+	if(subdomain == '' ){return;}
+
 	kidou();
 	start();
 	
 }, false);
 
 function start(){
+
 	interval = (localStorage['interval'] || "");
 	iconsetting();
-	if(interval == '0'){return;}
+	if(interval == '0' ){return;}
 	if( interval.match( /[^0-9]+/ ) || interval == '' ) {
 		interval = localStorage["interval"] = '60';
 	}
