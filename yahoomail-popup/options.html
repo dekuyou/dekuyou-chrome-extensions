@@ -35,7 +35,6 @@ function save_badge_options(){
 
     localStorage["nounread"] = document.getElementById("t1").value;
     localStorage["unread"] = document.getElementById("t2").value;
-//    localStorage["newmsg"] = document.getElementById("t3").value;
 	viewStatus("status_badge","Options Saved.");
 
 	
@@ -80,7 +79,6 @@ function height_options(){
 function domain_Initialization(){
     //
 	localStorage.removeItem("domain");
-//	localStorage.removeItem("subdomain");
 	viewStatus("status_domain"," Initialized.");
 
 	restore_options();
@@ -101,7 +99,6 @@ function restore_options() {
     document.getElementById("interval").value = ( localStorage["interval"] || "" );
     document.getElementById("t1").value = ( localStorage["nounread"] || "" );
     document.getElementById("t2").value = ( localStorage["unread"] || "" );
-//    document.getElementById("t3").value = ( localStorage["newmsg"] || "" );
 
 	if(( localStorage["0badge"] || "" )+"" == "true"){
 		document.getElementById("h1").checked = true;
@@ -112,15 +109,7 @@ function restore_options() {
 	if(( localStorage["height"] || "" )+"" == "true"){
 		document.getElementById("height1").checked = true;
 	}	
-//	if(( localStorage["nomailicongrey"] || "" )+"" == "true"){
-//		document.getElementById("g1").checked = true;
-//	}
 
-//	if(( localStorage["usesound"] || "" )+"" == "true"){
-//		document.getElementById("s1").checked = true;
-//	}
-    document.getElementById("domain").innerHTML = ( localStorage["domain"] || "" );
-	
 
 }
 
@@ -146,9 +135,7 @@ version <span id=ver></span>
 
 未読メッセージ件数表示バッヂカラー :<input type="text" name="c2" size="6" id="t2" class="html5jp-cpick [coloring:true]" readonly />&nbsp;
 
-<!--
-new msg badge color :<input type="text" name="c3" size="6" id="t3" class="html5jp-cpick [coloring:true]" readonly />&nbsp;
--->
+
 
 <button onclick="save_badge_options()">バッヂの色を変更.</button>
 <div id="status_badge"></div>
@@ -160,11 +147,7 @@ new msg badge color :<input type="text" name="c3" size="6" id="t3" class="html5j
 <div id="status_hide"></div>
 
 
-<!--
-no mail icon is grey: <input type="checkbox" name=f1 id=g1 value=''>&nbsp;
-<button onclick="save_nomailicongrey_options()">Change no mail icon.</button>
-<div id="status_nomailicon" ></div>
--->
+
 <br>
 
 ポップアップの高さを低く表示: <input type="checkbox" name=hi1 id=height1 value=''>&nbsp;
@@ -174,11 +157,6 @@ no mail icon is grey: <input type="checkbox" name=f1 id=g1 value=''>&nbsp;
 
 <br>
 
-
-
-Your Domain :<span id="domain"></span><button onclick="domain_Initialization()">初期化.</button>
-<div id="status_domain"></div>
-※ポップアップの表示に異常が発生したら初期化してください。あなたの利用ドメインが変更されている可能性があります。
 
 <br>
 

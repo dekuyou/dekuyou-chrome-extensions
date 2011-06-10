@@ -71,7 +71,7 @@ function stop(){
 
 
 function getYmail_jp_ddo_dekuyou(check){
-	if(!localStorage['domain']){return;}
+
 
 
 	try{
@@ -84,7 +84,7 @@ function getYmail_jp_ddo_dekuyou(check){
 		var flg = '0';
 		var xmlhttp = new window.XMLHttpRequest();
 		
-		xmlhttp.open("GET",localStorage['domain'] + "ipn/",false);
+		xmlhttp.open("GET","http://m.mg.mail.yahoo.co.jp/" + "ipn/",false);
 		try{
 			xmlhttp.send(null);
 			flg = '1';
@@ -110,8 +110,8 @@ function getYmail_jp_ddo_dekuyou(check){
 		}
 	}catch(e){
 		console.log("xmlhttp.responseText is ???:" + e); 
-//		chrome.browserAction.setIcon({path:'windows-live-logo_grey.png'});
 
+		
 		chrome.browserAction.setBadgeText({text:'?'});
 		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
 
@@ -122,9 +122,9 @@ function getYmail_jp_ddo_dekuyou(check){
 	// unread msg
 	var startA = text.indexOf("fid=Inbox");
 
-// alert(startA);
+
 	var midoku = text.substring(text.indexOf("icnBg", startA), text.indexOf("</li", startA));
-// alert(midoku);
+
 	var midokusuunohajimari;
 	var midokuB;
 	
@@ -133,22 +133,18 @@ function getYmail_jp_ddo_dekuyou(check){
 		
 	}else{
 		midoku = midoku.substring(midoku.indexOf("rightModule"), midoku.indexOf("</div",midoku.indexOf("rightModule")));
-// alert(midoku);
 
+		
 		midokusuunohajimari = midoku.search('[0-9]');
 
 		midokuB = midoku.substring(midokusuunohajimari);
 	}
-// alert(midokuB);
+
 	
 	// msgid
-//	var startB = text.indexOf("paddedbottom", startA);
-//	var newid = text.substring(text.indexOf("input id=", startB) +1 , text.indexOf("type=", startB)-2);
+
 	var idBadge = "";
-//	if(msgid != newid){
-//		idBadge = "1"
-//		msgid = newid;
-//	}
+
 	
 	try{
 		var hyouji = parseInt(midokuB);
@@ -182,28 +178,16 @@ function getYmail_jp_ddo_dekuyou(check){
 				chrome.browserAction.setBadgeBackgroundColor({color:[nounread[0],nounread[1],nounread[2], 255]});
 			}
 		}else{
-//			chrome.browserAction.setIcon({path:'windows-live-logo.png'});
-			
-			
-			if(idBadge == '1'){
-				// 
-				chrome.browserAction.setBadgeText({text:">" + hyouji});
-				chrome.browserAction.setBadgeBackgroundColor({color:[newmsg[0],newmsg[1],newmsg[2], 255]});
-				if(( localStorage["usesound"] || "" )+"" == "true"){
-					var file = 'newmsg1.mp3';
-					document.getElementById("hidearea").innerHTML ="<object classid='clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B' width='160' height='16' codebase='http://www.apple.com/qtactivex/qtplugin.cab'><param name='src' value='"+file+"'><param name='autoplay' value='true'><param name='controller' value='true'><embed src='"+file+"' type='audio/mpeg' width='160' height='16' autoplay='true' controller='true'></embed></object>";
-				}
-			}else{
-				// 255, 0, 0 red
+
+		// 255, 0, 0 red
 				chrome.browserAction.setBadgeText({text:"" + hyouji});
 				chrome.browserAction.setBadgeBackgroundColor({color:[unread[0],unread[1],unread[2], 255]});
 
-			}
-		}
+
+				}
 	}catch(e2){
 		console.log("HTML parse error:" + e2);
 		
-//		chrome.browserAction.setIcon({path:'windows-live-logo_grey.png'});
 		chrome.browserAction.setBadgeText({text:'xxxx'});
 		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
 
@@ -234,67 +218,9 @@ function foo() { alert("bar"); }
 
 
 var tab_id;
-function initYmailChecker(){
-	console.log("initializer routine");
-
-	chrome.tabs.create({url:'http://mail.yahoo.co.jp/', selected:false }, function(tab) {
-		tab_id = tab.id;
-		initTimer();
-	});
-	
-}
-
-function initYmailChecker2(){
-
-	chrome.tabs.get(tab_id, function(tab2) {
-		
-		var checkloginpage = tab2.url.indexOf("login.yahoo.co.jp", 0);
-		if(checkloginpage >=0 ){
-			console.log("un loged in "+ tab2.url);
-			goToYmail();
-			return;
-		}
-		
-			
-		console.log("your local domain is "+ tab2.url);
-		
-		tmpsubd = localStorage['domain'] = tab2.url.substring(0,tab2.url.indexOf("mail.yahoo.co.jp/")+17);
-		
-//		chrome.extension.sendRequest('fnnkchnikfopkpnkjmpfkbakjpipehfh',{url:tmpsubd});
-		removeInitTAB();
-	});
-
-}
 
 
-function removeInitTAB(){
-	console.log("chrome.tabs.remove(tab_id);");
 
-	chrome.tabs.remove(tab_id);
-	tab_id = '';
-
-}
-
-
-var iframedoc;
-function initTimer() {
-	var iframe = document.createElement("iframe");
-//	document.getElementById("frame").appendChild(iframe);
-//	iframedoc = iframe.contentDocument;
-//	iframedoc.writeln("<body></body>");
-//	iframedoc.location.href='http://mail.yahoo.co.jp/';
-
-	iframe.src = "http://mail.yahoo.co.jp/";
-
-	iframe.onload = function () {
-		initYmailChecker2();
-
-	}
-	
-	document.body.appendChild(iframe);
-
-	
-}
 
 
 function hex2RGB(hex){

@@ -1,6 +1,6 @@
 {
   "name": "Ｙ！メールポップアップ",
-  "version": "0.1.1.0",
+  "version": "0.2",
   "description": "Ｙａｈｏｏ！メールをポップアップで（おまけで未読メッセージ数表示）",
   "background_page": "background.html",
   "options_page": "options.html",
@@ -8,5 +8,7 @@
     "default_icon": "favicon.ico",
     "popup": "popup.html"
   },
-  "permissions": ["tabs","http://*/*","https://*/*"]
+  "icons": { "48": "mail48.png",
+			"128": "mail1291.png" },
+  "permissions": ["http://m.mg.mail.yahoo.co.jp/*"]
 }

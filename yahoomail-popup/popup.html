@@ -17,8 +17,7 @@ window.addEventListener('load', function(e) {
 	iframe = document.createElement("iframe");
 	iframe.width = "325";
 	iframe.height = "0"
-//	iframe.frameborder = "0";
-//	iframe.scrolling="no";	
+
 	document.getElementById("body").appendChild(iframe);
 
 	iframedoc = iframe.contentDocument;
@@ -27,8 +26,7 @@ window.addEventListener('load', function(e) {
 
 	var xmlhttp = new window.XMLHttpRequest();
 	
-	if(localStorage['domain']){
-		xmlhttp.open("GET",localStorage['domain'] + "ipn/",false);
+		xmlhttp.open("GET",'http://m.mg.mail.yahoo.co.jp/' + "ipn/",false);
 		try{
 			xmlhttp.send(null);
 			
@@ -42,10 +40,8 @@ window.addEventListener('load', function(e) {
 		}catch(e3){
 			console.log('xmlhttp.responseText is ???:' + localStorage['domain'] + 'ipn/:' + e3); 		
 		}
-	}
 	
 
-	background.initYmailChecker();
 	
 	intervalId = setInterval("getYmail_jp_ddo_dekuyou()", 5*1000); // 1*1000 = 1s
 
@@ -69,11 +65,9 @@ function getYmail_jp_ddo_dekuyou(){
 
 function addBody(localurl2){
 
-	localurl = (localStorage['domain'] || "");
 
-//	document.getElementById("yahoo").innerHTML = '<object data="'+ localurl +'ipn/" type="text/html" width="325" height="480"></object>';
 
-	iframedoc.location.href= localurl +'ipn/';
+	iframedoc.location.href= 'http://m.mg.mail.yahoo.co.jp/' +'hg/';
 
 	iframe.onload = function () {
 		intervalId = setInterval("viwe()", 1); // 1*1000 = 1s
@@ -88,7 +82,7 @@ var iframe;
 var i=0;
 var heightPopup;
 function viwe(){
-	i=i+5;
+	i=i+20;
 	iframe.height = i + "";
 	
 	if(( localStorage["height"] || "" )+"" == "true"){
