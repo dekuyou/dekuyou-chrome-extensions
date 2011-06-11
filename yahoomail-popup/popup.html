@@ -60,9 +60,14 @@ var interval='';
 
 function addBody(localurl2){
 
+	var io = "hg/";
+	if(( localStorage["io"] || "" )+"" == "true"){
+		io = 'hg/';
+	}else{
+		io = 'ipn/';
+	}
 
-
-	iframedoc.location.href= 'http://m.mg.mail.yahoo.co.jp/' +'hg/';
+	iframedoc.location.href= 'http://m.mg.mail.yahoo.co.jp/' + io;
 
 	iframe.onload = function () {
 		intervalId = setInterval("viwe()", 1); // 1*1000 = 1s

@@ -76,6 +76,15 @@ function height_options(){
 	
 }
 
+function io_options(){
+
+    localStorage["io"] = document.getElementById("io1").checked;
+	viewStatus("status_io","Options Saved.");
+
+	
+}
+
+
 function domain_Initialization(){
     //
 	localStorage.removeItem("domain");
@@ -109,7 +118,9 @@ function restore_options() {
 	if(( localStorage["height"] || "" )+"" == "true"){
 		document.getElementById("height1").checked = true;
 	}	
-
+	if(( localStorage["io"] || "" )+"" == "true"){
+		document.getElementById("io1").checked = true;
+	}	
 
 }
 
@@ -157,6 +168,12 @@ version <span id=ver></span>
 
 <br>
 
+新しいインタフェースを試す: <input type="checkbox" name=io1 id=io1 value=''>&nbsp;
+<button onclick="io_options()">インタフェース設定変更.</button>
+<div id="status_io" ></div>
+
+
+<br>
 
 <br>
 
@@ -166,6 +183,7 @@ version <span id=ver></span>
 </iframe>
 
 <!-- Thank you! @kyu3 -->
+<!-- Thank you! @sd_reverie -->
 </body>
 
 <script type="text/javascript" src="./cpick.js"></script>
