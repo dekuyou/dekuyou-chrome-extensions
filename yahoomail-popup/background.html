@@ -220,6 +220,32 @@ function foo() { alert("bar"); }
 var tab_id;
 
 
+function  loginYmail(){
+
+	console.log("Yahoo!Mail");
+	
+	chrome.tabs.getAllInWindow(undefined, function(tabs) {
+		for (var i = 0, tab; tab = tabs[i]; i++) {
+			var str = tab.url;
+			if (str.match('login.yahoo.co.jp/')) { 
+				console.log("tab selected : true");
+				chrome.tabs.update(tab.id, {selected: true});
+				chrome.tabs.executeScript(tab.id, {code: 'window.location.reload()'});
+				return;
+			}else if(str.match('login.yahoo.co.jp/')) { 
+				chrome.tabs.update(tab.id, {selected: true});
+				return;
+			}
+		}
+		console.log("create new tab.");
+		chrome.tabs.create({url:'http://mail.yahoo.co.jp/', selected:true }, function(tab) {
+			tab_id = tab.id;
+		});	
+	});
+	
+ 	
+}
+
 
 
 

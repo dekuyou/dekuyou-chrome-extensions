@@ -28,39 +28,34 @@ window.addEventListener('load', function(e) {
 	
 		xmlhttp.open("GET",'http://m.mg.mail.yahoo.co.jp/' + "ipn/",false);
 		try{
+			xmlhttp.onreadystatechange = function() { 
+				if (this.readyState == 4) { 
+					var text = this.responseText; 
+					if(text.indexOf('var action = "folders"') > 0){
+
+						addBody();
+						return;
+					}else{
+						background.loginYmail();
+						return;
+					}
+				} 
+			}; 
+		
+		
 			xmlhttp.send(null);
 			
-			var text = xmlhttp.responseText;
 			
-			if(text.indexOf('var action = "folders"') > 0){
 
-				addBody();
-				return;
-			}
 		}catch(e3){
 			console.log('xmlhttp.responseText is ???:' + localStorage['domain'] + 'ipn/:' + e3); 		
 		}
 	
 
-	
-	intervalId = setInterval("getYmail_jp_ddo_dekuyou()", 5*1000); // 1*1000 = 1s
-
-
 
 }, false);
 var interval='';
 
-function getYmail_jp_ddo_dekuyou(){
-	
-	if(localStorage['domain']){
-		clearInterval(intervalId);
-
-		addBody();
-	}else{
-		counter++;
-	}
-
-}
 
 
 function addBody(localurl2){
