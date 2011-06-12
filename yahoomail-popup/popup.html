@@ -24,6 +24,9 @@ window.addEventListener('load', function(e) {
 	
 	iframedoc.writeln('<body ></body>');
 
+	addBody();
+
+	
 	var xmlhttp = new window.XMLHttpRequest();
 	
 		xmlhttp.open("GET",'http://m.mg.mail.yahoo.co.jp/' + "ipn/",false);
@@ -33,7 +36,6 @@ window.addEventListener('load', function(e) {
 					var text = this.responseText; 
 					if(text.indexOf('var action = "folders"') > 0){
 
-						addBody();
 						return;
 					}else{
 						background.loginYmail();
@@ -56,11 +58,11 @@ window.addEventListener('load', function(e) {
 }, false);
 var interval='';
 
-
+var io = "hg/";
 
 function addBody(localurl2){
 
-	var io = "hg/";
+	
 	if(( localStorage["io"] || "" )+"" == "true"){
 		io = 'hg/';
 	}else{
@@ -92,9 +94,16 @@ function viwe(){
 	}
 	if(i >heightPopup){
 		clearInterval(intervalId);
-		document.getElementById("load").innerHTML = '';
+		document.getElementById("load").innerHTML = "<img src=window_open.gif label='update Twitter.' onClick=openWindow();>";
 
 	}
+}
+
+function openWindow(){
+
+window.open('http://m.mg.mail.yahoo.co.jp/' + io , 'Y!メール', 'width=325, height='+heightPopup+', menubar=no, toolbar=no, scrollbars=yes');
+
+
 }
 
 
