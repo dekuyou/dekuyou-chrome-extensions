@@ -1,6 +1,6 @@
 {
   "name": "Hotmail Checker",
-  "version": "0.2.16.3",
+  "version": "0.2.16.4",
   "description": "Hotmail Notification! Displays the number of unread messages in your Windows Live Hotmail inbox. ",
   "icons": { "48": "windows-live-logo48.png",
           "128": "windows-live-logo128.png" },
@@ -11,8 +11,7 @@
   "background_page": "background.html",
   "options_page": "options.html",
   "permissions": [ 
-	"tabs","http://*/*"
-	,"https://*/*" 
+	"tabs","http://*.mail.live.com/*"
 	,"notifications"
 	]
 }

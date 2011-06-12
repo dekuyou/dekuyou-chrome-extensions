@@ -93,6 +93,15 @@ function iconsetting(){
 }
 
 
+//htmlな文字をエスケープ
+function escapeHTML(_strTarget){
+    var div = document.createElement('div');
+    var text =  document.createTextNode('');
+    div.appendChild(text);
+    text.data = _strTarget;
+    return div.innerHTML;
+}
+
 
 
 function checkversion(){
