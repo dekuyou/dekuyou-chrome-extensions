@@ -11,6 +11,6 @@
    },
    "name": "pop HotMail",
   "background_page": "background.html",   
-  "permissions": ["http://*mail.live.com/*"],
-   "version": "1.2.1"
+  "permissions": ["http://*.mail.live.com/*"],
+   "version": "1.2.1.1"
 }
