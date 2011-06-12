@@ -30,16 +30,36 @@ var intervalId;
 var iframe;
 var i=0
 
+var heightPopup = '480';
+
 function viwe(){
-	i=i+5;
-	if(i >'480'){
-		clearInterval(intervalId);
-		document.getElementById("load").innerHTML = '';
-		i=480;
+	i=i+10;
+	
+	
+	
+	if(( localStorage["height"] || "" )+"" == "true"){
+		heightPopup = '400';
+	}else{
+		heightPopup = '480';
 	}
-	iframe.height = i + "";
+	if(i >heightPopup){
+		clearInterval(intervalId);
+		document.getElementById("load").innerHTML = "<img src=window_open.gif label='update Twitter.' onClick=openWindow();>";
+
+	}else{
+		iframe.height = i + "";
+	}
+
 
 }
+
+function openWindow(){
+
+window.open('http://mail.live.com/m/folder.aspx', 'hotmail pop-up', 'width=325, height='+heightPopup+', menubar=no, toolbar=no, scrollbars=yes');
+
+
+}
+
 
 </script>
 
@@ -48,11 +68,6 @@ function viwe(){
 <body>
 <table>
 <tr>
-<td colspan=2>
-<div id=body></div>
-</td>
-</tr>
-<tr>
 <td>
 <span align=left><a href=http://mail.live.com/ target=_blank> -> Go to mail.live.com.</a></span>
 </td>
@@ -60,6 +75,11 @@ function viwe(){
 <span align=right id=load><img src=loadinfo.net.gif></span>
 </td>
 
+</tr>
+<tr>
+<td colspan=2>
+<div id=body></div>
+</td>
 </tr>
 </table>
 
