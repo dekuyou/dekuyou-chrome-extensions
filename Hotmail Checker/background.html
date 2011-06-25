@@ -315,6 +315,14 @@ function countMainLogic(check){
 		}
 		
 		
+		// to pop Hotmail
+		// test efnaihaomojahppdeapkepfjjbimgcnf
+		// kdcplbkngfddcnleoidieeebdonbfdii
+		chrome.extension.sendRequest("kdcplbkngfddcnleoidieeebdonbfdii", {greeting: hyouji}, function(response) {
+			console.log(response.farewell);
+		});
+		
+		
 		// color seting
 		if ((localStorage["nounread"] || "") != ""){
 			nounread = hex2RGB(localStorage["nounread"]);
