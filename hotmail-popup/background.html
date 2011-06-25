@@ -57,6 +57,23 @@ function getSelectedText() {
 }
 
 
+
+// from Hotmail Checker jkkhlmcnbdhoddgjhlgikcpmigdmlcmd
+// test lingbnodhoflmoiaphdoliejalimbddd
+chrome.extension.onRequestExternal.addListener(
+  function(request, sender, sendResponse) {
+  
+    if (sender.id == "jkkhlmcnbdhoddgjhlgikcpmigdmlcmd"){
+	//request.greeting
+		chrome.browserAction.setBadgeText({text:''+request.greeting});
+		sendResponse({farewell: "thx"});
+    }else{
+      sendResponse({}); // snub them.
+	}
+  }
+);
+
+
 function foo() { alert("bar"); }
 
 
