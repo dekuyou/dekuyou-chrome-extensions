@@ -1,6 +1,6 @@
 {
   "name": "Ｙ！メールポップアップ",
-  "version": "0.2.8",
+  "version": "0.2.8.1",
   "description": "Ｙａｈｏｏ！メールをポップアップで（おまけで未読メッセージ数表示）",
   "background_page": "background.html",
   "options_page": "options.html",
