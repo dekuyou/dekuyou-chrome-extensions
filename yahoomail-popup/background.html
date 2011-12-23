@@ -81,44 +81,34 @@ function getYmail_jp_ddo_dekuyou(check){
 		}
 		subdomain = (localStorage["subdomain"] || "");
 		
-		var flg = '0';
+
 		var xmlhttp = new window.XMLHttpRequest();
 		
-		xmlhttp.open("GET","http://m.mg.mail.yahoo.co.jp/" + "ipn/",false);
-		try{
-			xmlhttp.send(null);
-			flg = '1';
-		}catch(e3){
-			console.log('xmlhttp.responseText is ???:' + localStorage['domain'] + "ipn/" + e3); 		
-		}
+		xmlhttp.open("GET","http://m.mail.yahoo.co.jp/" + "ipn/",true);
+		xmlhttp.setRequestHeader('Content-Type', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
 		
-		var text = xmlhttp.responseText;
-
-		
-		if(text == ''){
+		xmlhttp.onreadystatechange=function(){
+			if(xmlhttp.readyState == 4) {
+//				console.log(xmlhttp.status);
+//				console.log(xmlhttp.responseText);
+				
+				var text = xmlhttp.responseText;
 			
-			throw new Error("xmlhttp.responseText is null.");
 		
-		
-		}else{
-			localStorage["bodytext"] = text;
+				if(text == ''){
 			
-			if(text.indexOf('var action = "folders";') <0){
-				throw new Error("xmlhttp.responseText is no folders.");
-			}
+					throw new Error("xmlhttp.responseText is null.");
+		
+		
+				}else{
+					localStorage["bodytext"] = text;
 			
-		}
-	}catch(e){
-		console.log("xmlhttp.responseText is ???:" + e); 
+					if(text.indexOf('var action = "folders";') <0){
+						throw new Error("xmlhttp.responseText is no folders.");
+					}
+			
+				}
 
-		
-		chrome.browserAction.setBadgeText({text:'?'});
-		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
-
-		
-		return;
-	}
-	
 	// unread msg
 	var startA = text.indexOf("fid=Inbox");
 
@@ -192,6 +182,23 @@ function getYmail_jp_ddo_dekuyou(check){
 		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
 
 	}
+
+
+			}
+		};
+		xmlhttp.send(null);
+
+	}catch(e){
+		console.log("xmlhttp.responseText is ???:" + e); 
+
+		
+		chrome.browserAction.setBadgeText({text:'?'});
+		chrome.browserAction.setBadgeBackgroundColor({color:[128, 128, 128, 255]});
+
+		
+		return;
+	}
+	
 
 }
 

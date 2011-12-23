@@ -1,6 +1,6 @@
 {
-  "name": "add 2 GNote",
-  "version": "1.0.0.6",
+  "name": "add 2 GNote (for Google Notebook(TM).)",
+  "version": "1.0.0.7",
   "description": "Current page add to Google Notebook.",
   "icons": { "48": "google-notebook.png",
           "128": "google-notebook.png" },  

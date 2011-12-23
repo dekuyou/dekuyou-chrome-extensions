@@ -29,7 +29,9 @@ window.addEventListener('load', function(e) {
 	
 	var xmlhttp = new window.XMLHttpRequest();
 	
-		xmlhttp.open("GET",'http://m.mg.mail.yahoo.co.jp/' + "ipn/",false);
+		xmlhttp.open("GET",'http://m.mail.yahoo.co.jp/' + "ipn/",false);
+		xmlhttp.setRequestHeader('Content-Type', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
+
 		try{
 			xmlhttp.onreadystatechange = function() { 
 				if (this.readyState == 4) { 
