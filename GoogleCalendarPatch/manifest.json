@@ -1,0 +1,14 @@
+{
+  "name": "晴海　晴海メソッド",
+  "version": "0.0.1.3",
+  "description": "Google Calendar 日本語で検索したときのBUG回避パッチです。",
+  "background_page": "background.html",
+  "permissions": ["tabs","http://www.google.com/calendar/*","https://www.google.com/calendar/*"],
+     "content_scripts": [
+    {
+      "matches": ["http://www.google.com/calendar/*","https://www.google.com/calendar/*"],
+      "js": ["jp_ddo_dekuyou_googlecalendar.js"]
+    }
+  ]
+}
+

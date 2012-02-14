@@ -1,0 +1,13 @@
+{
+  "name": "ＹＡＨＯＯ！ ブックマーク" ,
+  "version": "0.0.0.1",
+  "description": "ＹＡＨＯＯ！ブックマークに表示ページを追加します。",
+  "icons": { "48": "ybm50.gif",
+          "128": "ybm50.gif" },  
+  "background_page": "background.html",
+  "browser_action": {
+    "default_title": "ＹＡＨＯＯ！ ブックマーク",
+    "default_icon": "ybm50.gif"
+  },
+  "permissions": [ "tabs","http://*/*","https://*/*" ]
+}
