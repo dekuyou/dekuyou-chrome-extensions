@@ -24,7 +24,7 @@ window.addEventListener('load', function(e) {
 	
 	iframedoc.writeln('<body ></body>');
 
-	addBody();
+	// addBody();
 
 	
 	var xmlhttp = new window.XMLHttpRequest();
@@ -37,7 +37,7 @@ window.addEventListener('load', function(e) {
 				if (this.readyState == 4) { 
 					var text = this.responseText; 
 					if(text.indexOf('var action = "folders"') > 0){
-
+						addBody();
 						return;
 					}else{
 						background.loginYmail();
