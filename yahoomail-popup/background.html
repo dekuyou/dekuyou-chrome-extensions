@@ -85,7 +85,7 @@ function getYmail_jp_ddo_dekuyou(check){
 
 		var xmlhttp = new window.XMLHttpRequest();
 		
-		xmlhttp.open("GET","http://m.mail.yahoo.co.jp/" + "ipn/",true);
+		xmlhttp.open("GET","http://m.mail.yahoo.co.jp/" + "ipn/", false);
 		xmlhttp.setRequestHeader('Content-Type', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8');
 		
 		xmlhttp.onreadystatechange=function(){
