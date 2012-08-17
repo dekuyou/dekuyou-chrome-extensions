@@ -60,7 +60,7 @@ var interval='';
 function addBody(localurl2){
 
 
-	iframedoc.location.href= 'http://m.mg.mail.yahoo.co.jp/cl';
+	iframedoc.location.href= 'http://m.mail.yahoo.co.jp/hg/#mail/folders';
 
 	iframe.onload = function () {
 		intervalId = setInterval(function () {
@@ -96,7 +96,7 @@ function viwe(){
 
 function openWindow(){
 
-	window.open('http://m.mg.mail.yahoo.co.jp/cl'  , 'Y!メール', 'width=325, height='+heightPopup+', menubar=no, toolbar=no, scrollbars=yes');
+	window.open('http://m.mail.yahoo.co.jp/hg/#mail/folders'  , 'Y!メール', 'width=325, height='+heightPopup+', menubar=no, toolbar=no, scrollbars=yes');
 
 
 }
