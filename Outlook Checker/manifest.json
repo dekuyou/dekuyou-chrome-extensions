@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+  "name": "Outlook Checker",
+  "version": "0.0.1.1",
+  "description": "Outlook mail Notification! Displays the unread count in your Outlook inbox. ",
+  "icons": { "48": "windows-live-logo48.png",
+          "128": "windows-live-logo128.png" },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "background": {
+    "page": "background.html"
+  },
+  "options_page": "options.html",
+  "browser_action": {
+    "default_title": "check now!",
+    "default_icon": "outlook_ico.png"
+  },
+  "permissions": [ 
+  	"tabs","http://*.mail.live.com/*",
+    "notifications"
+	]
+}

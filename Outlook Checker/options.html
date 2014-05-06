@@ -1,0 +1,264 @@
+<html>
+<title>Hotmail Checker Setting</title>
+
+<script>
+
+var background = chrome.extension.getBackgroundPage();
+window.onload = function(){
+	restore_options();
+	document.getElementById("ver").innerHTML = background.chrome.extension.getVersion();
+	
+}
+
+
+function save_interval() {
+	var interval = document.getElementById("interval").value;
+	if( interval.match( /[^0-9]+/ ) ) {
+		viewStatus("status_interval", "enter a number.");
+		return;
+	}
+	
+    //
+    localStorage["interval"] = interval;
+	
+	viewStatus("status_interval","Options Saved.");
+	
+	background.stop();
+	
+}
+function save_sign(){
+    localStorage["sign"] = (document.getElementById("sign").value || "");
+	viewStatus("status_sign","Options Saved.");
+}
+
+
+
+function save_badge_options(){
+
+    localStorage["nounread"] = document.getElementById("t1").value;
+    localStorage["unread"] = document.getElementById("t2").value;
+    localStorage["newmsg"] = document.getElementById("t3").value;
+	viewStatus("status_badge","Options Saved.");
+
+	
+}
+
+function save_hide_options(){
+
+    localStorage["0badge"] = document.getElementById("h1").checked;
+    localStorage["checkingbadge"] = document.getElementById("h2").checked;
+	viewStatus("status_hide","Options Saved.");
+
+	
+}
+
+function save_buttonicon_options(){
+	if(document.getElementById("icon1").checked){
+		localStorage["icon"] = '1';
+		
+	}else if(document.getElementById("icon2").checked){
+		localStorage["icon"] = '2';
+
+	}else if(document.getElementById("icon3").checked){
+		localStorage["icon"] = '3';	
+
+	}else{
+		 localStorage["icon"] = '1';
+	}
+
+	viewStatus("status_icon","Options Saved.");
+	
+	background.iconsetting();
+
+}
+
+
+function save_nomailicongrey_options(){
+
+    localStorage["nomailicongrey"] = document.getElementById("g1").checked;
+	viewStatus("status_nomailicon","Options Saved.");
+
+	
+}
+
+function save_sound_options(){
+
+    localStorage["usesound"] = document.getElementById("s1").checked;
+	localStorage["soundpath"] = document.getElementById("soundpath").value;
+	viewStatus("status_sound","Options Saved.");
+
+	
+}
+
+
+function save_desktopnotify_options(){
+
+    localStorage["usedesktopnotify"] = document.getElementById("dn1").checked;
+	viewStatus("status_desktopnotify","Options Saved.");
+
+	
+}
+
+function domain_Initialization(){
+    //
+	localStorage.removeItem("domain");
+	localStorage.removeItem("subdomain");
+	viewStatus("status_domain"," Initialized.");
+
+	restore_options();
+
+}
+
+function viewStatus(str1,str2){
+    //
+    var status = document.getElementById(str1);
+    status.innerHTML = str2;
+    setTimeout(function() { status.innerHTML = ""; }, 1 * 1000);
+
+
+}
+
+function restore_options() {
+    //
+    document.getElementById("interval").value = ( localStorage["interval"] || "" );
+    document.getElementById("t1").value = ( localStorage["nounread"] || "" );
+    document.getElementById("t2").value = ( localStorage["unread"] || "" );
+    document.getElementById("t3").value = ( localStorage["newmsg"] || "" );
+
+	if(( localStorage["0badge"] || "" )+"" == "true"){
+		document.getElementById("h1").checked = true;
+	}
+	if(( localStorage["checkingbadge"] || "" )+"" == "true"){
+		document.getElementById("h2").checked = true;
+	}
+	
+	if(( localStorage["nomailicongrey"] || "" )+"" == "true"){
+		document.getElementById("g1").checked = true;
+	}
+
+	if(( localStorage["usesound"] || "" )+"" == "true"){
+		document.getElementById("s1").checked = true;
+	}
+	
+	if(( localStorage["usedesktopnotify"] || "" )+"" == "true"){
+		document.getElementById("dn1").checked = true;
+	}
+	
+//	if(( localStorage["oldicon"] || "" )+"" == "true"){
+//		document.getElementById("icon2").checked = true;
+//	}
+	if(( localStorage["icon"] || "" )+"" == "1"){
+		document.getElementById("icon1").checked = true;
+	}else if(( localStorage["icon"] || "" )+"" == "2"){
+		document.getElementById("icon2").checked = true;
+	}else if(( localStorage["icon"] || "" )+"" == "3"){
+		document.getElementById("icon3").checked = true;
+	}
+ 
+
+	
+	
+	
+    document.getElementById("sign").value = ( localStorage["sign"] || "" );
+
+    document.getElementById("domain").innerHTML = ( localStorage["domain"] || "" );
+	
+	document.getElementById("soundpath").value = ( localStorage["soundpath"] || "" );
+	
+
+}
+function sound_test(){
+//'newmsg1.mp3'
+if (document.getElementById("soundpath").value === ""){
+	file = 'newmsg1.mp3';
+}else{
+	file = document.getElementById("soundpath").value;
+};
+	background.ring_sound(file);
+}
+</script>
+
+<body >
+<h1><img src=./windows-live-logo48.png>Hotmail Checker Settings</h1>
+version <span id=ver></span>
+<hr>
+
+
+<br>
+interval :<input id="interval" type="Number" name="interval" size='5' required>s</input>
+<button onclick="save_interval()">Change interval.</button> 0 is Manual mode.
+<div id="status_interval"></div>
+
+<br>
+
+0 badge color :<input type="text" name="c1" size="6" id="t1" value="" class="html5jp-cpick [coloring:true]" readonly />&nbsp;
+
+unread badge color :<input type="text" name="c2" size="6" id="t2" class="html5jp-cpick [coloring:true]" readonly />&nbsp;
+
+new msg badge color :<input type="text" name="c3" size="6" id="t3" class="html5jp-cpick [coloring:true]" readonly />&nbsp;
+<button onclick="save_badge_options()">Change Badge colors.</button>
+<div id="status_badge"></div>
+new msg sign :<input id="sign" type="text" name="newmsgsign" size='1' maxlength=1></input>
+<button onclick="save_sign()">Change sign.</button>
+<div id="status_sign"></div>
+
+<br>
+
+hide 0 badge: <input type="checkbox" name=i1 id=h1 value='' >&nbsp;
+hide checking badge: <input type="checkbox" name=i2 id=h2 value=''>&nbsp;
+<button onclick="save_hide_options()">Change Badge hides.</button>
+<div id="status_hide"></div>
+
+no mail icon is grey: <input type="checkbox" name=f1 id=g1 value=''>&nbsp;
+<button onclick="save_nomailicongrey_options()">Change no mail icon.</button>
+<div id="status_nomailicon" ></div>
+
+<br>
+
+
+
+icon : <img src=windows-live-logo.png><input type="radio" name="icon" id="icon1" value="use default icon" checked><img src=old_windows-live-logo.png><input type="radio" name="icon" id="icon2" value="use Old icon"><img src=live_hotmail_w4_logo.png><input type="radio" name="icon" id="icon3" value="use New icon"><button onclick="save_buttonicon_options()">Change Button image.</button>
+<div id="status_icon" ></div>
+<br>
+
+use Sound : <input type="checkbox" name=t1 id=s1 value=''><input id="soundpath" type="text" name="soundpath" size='50' ></input>
+<button onclick="sound_test()">Test.</button>&nbsp;
+<button onclick="save_sound_options()">Change use Sound.</button>
+<div id="status_sound" ></div>
+
+<br>
+
+
+
+use Desktop Notify : <input type="checkbox" name=d1 id=dn1 value=''>
+<button onclick="save_desktopnotify_options()">Change use Desktop Notify.</button>
+<div id="status_desktopnotify" ></div>
+
+<br>
+
+<br>
+
+<br>
+
+
+
+Your Domain :<span id="domain"></span><button onclick="domain_Initialization()">Initialization.</button>
+<div id="status_domain"></div>
+
+<br>
+
+
+<hr>
+<span ><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=dekuyou%40dekuyou%2eddo%2ejp&lc=US&item_name=Thanks%20you%20support%20dekuyou%27s%20chrome%20extensions&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHostedGuest"><img alt="PayPal - The safer, easier way to pay online!" border="0" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" ></a></span>
+<iframe src="http://dekuyou.ddo.jp/myPage.html" width=100% height=80 scrolling="no" frameborder="0">
+</iframe>
+
+
+
+ <div id="hidearea" style="display: none;"></div>
+
+<!-- Thank you! @Adada @JC @Marko -->
+</body>
+
+<script type="text/javascript" src="./cpick.js"></script>
+</html>
