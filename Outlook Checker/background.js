@@ -23,6 +23,8 @@ var icon_color_2 = 'old_windows-live-logo.png';
 var icon_grey_2 = 'old_windows-live-logo_grey.png';
 var icon_color_1 = 'windows-live-logo.png';
 var icon_grey_1 = 'windows-live-logo_grey.png';
+var icon_color_0 = 'outlook_icon.png';
+var icon_grey_0 = 'outlook_icon_grey.png';
 
 var xmlhttp;
 
@@ -130,8 +132,10 @@ function stop(){
 
 function iconsetting(){
 
-
-	if(( localStorage["icon"] || "" )+"" == "1"){
+	if(( localStorage["icon"] || "" )+"" == "0"){
+		icon_color = icon_color_0;
+		icon_grey = icon_grey_0;
+	}else if(( localStorage["icon"] || "" )+"" == "1"){
 		icon_color = icon_color_1;
 		icon_grey = icon_grey_1;
 	}else if(( localStorage["icon"] || "" )+"" == "2"){
