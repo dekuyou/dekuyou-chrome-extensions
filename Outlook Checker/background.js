@@ -9,7 +9,7 @@ var unread = [255,0,0];
 var newmsg = [255,0,0];
 
 var intervalId;
-var domainAndFolder='.mail.live.com/md/folder.aspx';
+var domainAndFolder='.mail.live.com/m/folders.m/list';
 
 var icon_grey ="windows-live-logo_grey.png";
 var icon_color ="windows-live-logo.png";
@@ -477,7 +477,7 @@ function initHotmailChecker(){
 	console.log("initializer routine");
 
 	doinit = '1';
-	chrome.tabs.create({url:'http://mail.live.com/md/', selected:false }, function(tab) {
+	chrome.tabs.create({url:'http://mail.live.com/', selected:false }, function(tab) {
 		tab_id = tab.id;
 		initTimer();
 	});
@@ -496,17 +496,17 @@ function initHotmailChecker2(){
 			
 		console.log("your local domain is "+ tab2.url);
 		
-		var tmpsubd = tab2.url.substring(7,20);
+		var tmpsubd = tab2.url.substring(8,14);
 		
 		console.log("your local sub domain is "+ tmpsubd);
 		
 		var xmlhttp = new window.XMLHttpRequest();
 		
-		xmlhttp.open("GET",'http://' + tmpsubd + domainAndFolder,false);
+		xmlhttp.open("GET",'https://' + tmpsubd + domainAndFolder,false);
 		try{
 			xmlhttp.send(null);
 		}catch(e3){
-			console.log("xmlhttp.responseText is ???:http://mail.live.com/m/folder.aspx:" + e3); 		
+			console.log("xmlhttp.responseText is ???:https://mail.live.com/ :" + e3); 		
 		}
 		
 		var text = xmlhttp.responseText;
@@ -548,7 +548,7 @@ function initTimer() {
 	  iframedoc = iframe.contentDocument;
 	}
 	iframedoc.writeln("<body></body>");
-	iframedoc.location.href='http://mail.live.com/m/';
+	iframedoc.location.href='http://mail.live.com/';
 
 	iframe.onload = function () {
 		initHotmailChecker2();
@@ -566,7 +566,7 @@ function kidou() {
 	  iframedoc = iframe.contentDocument;
 	}
 	iframedoc.writeln("<body></body>");
-	iframedoc.location.href='http://mail.live.com/m/';
+	iframedoc.location.href='http://mail.live.com/';
 
 	iframe.onload = function () {
 		getHotmail_jp_ddo_dekuyou();

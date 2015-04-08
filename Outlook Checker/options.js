@@ -15,15 +15,7 @@ window.addEventListener('load', function(e) {
 	document.getElementById("sound_test").addEventListener('click', sound_test);
 	document.getElementById("save_sound_options").addEventListener('click', save_sound_options);
 	document.getElementById("save_desktopnotify_options").addEventListener('click', save_desktopnotify_options);
-	document.getElementById("domain_Initialization").addEventListener('click', domain_Initializationsave_buttonicon_options);
-
-
-
-
-
-
-
-
+	document.getElementById("domain_Initialization").addEventListener('click', domain_Initialization);
 
 
 
